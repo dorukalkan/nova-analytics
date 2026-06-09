@@ -19,10 +19,21 @@ env/
 data/
 
 # Environment variables
-.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
 
 # Cache files
 .cache/
 
 # Zensical build output
 site/
+
+# Google Cloud local credentials
+.gcloud/
+credentials.json
+application_default_credentials.json
+*service-account*.json
