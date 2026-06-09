@@ -1,0 +1,103 @@
+seed: 20260609
+target_rows: 50000000
+batch_size: 1000000
+
+paths:
+  raw_dir: data/raw
+  corrected_dir: data/corrected
+  qa_dir: data/corrected/qa
+  validation_report: docs/reports/corrected_data_validation.md
+
+dates:
+  start: "2024-01-01"
+  end: "2024-12-31"
+  monthly_shares:
+    "2024-01": 0.066
+    "2024-02": 0.064
+    "2024-03": 0.070
+    "2024-04": 0.074
+    "2024-05": 0.078
+    "2024-06": 0.081
+    "2024-07": 0.084
+    "2024-08": 0.086
+    "2024-09": 0.088
+    "2024-10": 0.092
+    "2024-11": 0.104
+    "2024-12": 0.113
+
+categories:
+  Food Delivery:
+    base_share: 0.30
+    avg_ticket: 24.0
+    complete_rate: 0.935
+  Ride Hailing:
+    base_share: 0.22
+    avg_ticket: 20.0
+    complete_rate: 0.885
+  E-Commerce:
+    base_share: 0.21
+    avg_ticket: 82.0
+    complete_rate: 0.865
+  Grocery:
+    base_share: 0.15
+    avg_ticket: 58.0
+    complete_rate: 0.910
+  Digital Wallet:
+    base_share: 0.12
+    avg_ticket: 46.0
+    complete_rate: 0.972
+
+platform_user_agents:
+  ios: "Nova App v4.2 (iOS 17.1; iPhone 14 Pro)"
+  android: "Nova App v4.2 (Android 14; Samsung S23)"
+  lite: "Nova Lite (Android Go)"
+  web: "Nova Web Portal (Chrome 120.0)"
+
+referral_sources:
+  - Organic Search
+  - Friend Referral
+  - Email Promo
+  - Social Ad
+  - Push Notification
+
+user_segments:
+  Dormant: 0.15
+  Casual: 0.38
+  Regular: 0.30
+  Power: 0.10
+  New: 0.07
+
+service_tiers:
+  Head: 0.02
+  Mid: 0.18
+  Long Tail: 0.80
+
+markets:
+  - {id: 1, name: Singapore, region: Southeast Asia, lat: 1.3521, long: 103.8198, weight: 0.070, growth: 1.08, ios_share: 0.55}
+  - {id: 2, name: Jakarta, region: Southeast Asia, lat: -6.2088, long: 106.8456, weight: 0.090, growth: 1.18, ios_share: 0.28}
+  - {id: 3, name: Manila, region: Southeast Asia, lat: 14.5995, long: 120.9842, weight: 0.075, growth: 1.16, ios_share: 0.32}
+  - {id: 4, name: Bangkok, region: Southeast Asia, lat: 13.7563, long: 100.5018, weight: 0.065, growth: 1.12, ios_share: 0.36}
+  - {id: 5, name: Ho Chi Minh City, region: Southeast Asia, lat: 10.8231, long: 106.6297, weight: 0.060, growth: 1.17, ios_share: 0.30}
+  - {id: 6, name: Istanbul, region: EMEA, lat: 41.0082, long: 28.9784, weight: 0.065, growth: 1.11, ios_share: 0.44}
+  - {id: 7, name: Dubai, region: EMEA, lat: 25.2048, long: 55.2708, weight: 0.050, growth: 1.14, ios_share: 0.58}
+  - {id: 8, name: Riyadh, region: EMEA, lat: 24.7136, long: 46.6753, weight: 0.050, growth: 1.15, ios_share: 0.52}
+  - {id: 9, name: London, region: Europe, lat: 51.5072, long: -0.1276, weight: 0.060, growth: 1.05, ios_share: 0.60}
+  - {id: 10, name: New York, region: North America, lat: 40.7128, long: -74.0060, weight: 0.065, growth: 1.04, ios_share: 0.62}
+  - {id: 11, name: Mexico City, region: Latin America, lat: 19.4326, long: -99.1332, weight: 0.055, growth: 1.13, ios_share: 0.34}
+  - {id: 12, name: Sao Paulo, region: Latin America, lat: -23.5558, long: -46.6396, weight: 0.060, growth: 1.12, ios_share: 0.36}
+  - {id: 13, name: Mumbai, region: South Asia, lat: 19.0760, long: 72.8777, weight: 0.080, growth: 1.20, ios_share: 0.25}
+  - {id: 14, name: Bangalore, region: South Asia, lat: 12.9716, long: 77.5946, weight: 0.070, growth: 1.19, ios_share: 0.30}
+  - {id: 15, name: Tokyo, region: East Asia, lat: 35.6762, long: 139.6503, weight: 0.060, growth: 1.06, ios_share: 0.64}
+  - {id: 16, name: Sydney, region: Oceania, lat: -33.8688, long: 151.2093, weight: 0.025, growth: 1.03, ios_share: 0.61}
+
+validation:
+  active_user_rate_min: 0.75
+  active_user_rate_max: 0.88
+  repeat_user_rate_max: 0.98
+  min_category_amount_mean_spread_usd: 15.0
+  min_completion_rate_spread_pct_points: 3.0
+  min_hourly_cv: 0.05
+  min_december_to_january_ratio: 1.5
+  top_1pct_service_share_min: 0.15
+  top_1pct_service_share_max: 0.30
+  max_market_jitter_degrees: 0.85
