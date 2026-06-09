@@ -1,0 +1,28 @@
+# MacOS
+.DS_Store
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Data files
+data/
+
+# Environment variables
+.env
+
+# Cache files
+.cache/
+
+# Zensical build output
+site/
