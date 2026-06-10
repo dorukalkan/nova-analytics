@@ -1,0 +1,20 @@
+.landing-page-banner {
+  margin: 0 0 1.1rem;
+}
+
+.landing-page-banner img {
+  display: block;
+  width: 100%;
+  max-width: 960px;
+  height: auto;
+  border-radius: 8px;
+}
+
+.project-page-author {
+  margin-top: -0.7rem;
+  margin-bottom: 0.7rem;
+  color: var(--md-default-fg-color--light);
+
+  font-size: 0.72rem;
+  letter-spacing: 0;
+}
