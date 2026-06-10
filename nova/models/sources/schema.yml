@@ -1,0 +1,15 @@
+version: 2
+sources:
+  - name: raw
+    database: nova-project-498911
+    schema: nova_raw
+    description: "Nova tables ingested into BigQuery."
+    tables:
+      - name: nova_interactions
+        description: "Raw interactions table."
+      - name: nova_markets
+        description: "Raw markets table."
+      - name: nova_services
+        description: "Raw services table."
+      - name: nova_users
+        description: "Raw users table."
