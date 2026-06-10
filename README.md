@@ -21,5 +21,4 @@ For a quick smoke test without creating 50M rows:
   --report-path /private/tmp/nova_corrected_smoke_validation.md \
   --no-strict
 ```
-
 Final BigQuery ingestion should use `data/corrected/`, not `data/raw/`.
