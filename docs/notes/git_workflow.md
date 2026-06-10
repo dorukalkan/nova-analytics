@@ -6,295 +6,355 @@ description: Git & dbt workflow
 
 ## Git + dbt Çalışma Akışı
 
-Bu akış, kendi branch’imizde çalışıp değişiklikleri güvenli şekilde GitHub’a göndermek, dbt modellerini test etmek ve sonra main branch’e merge etmek için kullanılabilir.
+Bu sayfa, kendi branch'inde güvenli şekilde çalışmak, dbt modellerini kontrol etmek ve değişiklikleri Pull Request ile `main` branch'ine eklemek için hazırlanmıştır.
 
-Temel mantık şu:
+Temel mantık:
 
-text main = projenin temiz / çalışan hali feature branch = kendi üzerinde çalıştığın ayrı dal PR = yaptığın işi main’e eklemeden önce kontrol etme ve birleştirme adımı 
+```text
+main = projenin temiz / çalışan hali
+feature branch = kendi işin için açtığın ayrı dal
+PR = yaptığın işi main'e eklemeden önce kontrol etme ve birleştirme adımı
+```
 
+!!! warning "main branch'te direkt çalışma"
 
-### 1. Kendi branch’ini remote’a gönder
+    `main` branch projenin ortak ve temiz hali gibi düşünülmeli. Yeni bir iş yaparken önce `main`'i güncelle, sonra ayrı bir branch aç.
 
-Önce yaptığın branch’i GitHub’a gönderiyoruz:
+!!! note "Her yeni iş için kısa akış"
 
-bash git push -u origin drk-add-marts 
+    `main` -> yeni branch -> değişiklik -> dbt build -> commit -> push -> PR
 
-Buradaki mantık:
+## 1. main branch'i güncelle
 
-- origin: GitHub’daki repo.
-- drk-add-marts: Üzerinde çalıştığın branch adı.
-- -u: Bu local branch ile GitHub’daki remote branch’i birbirine bağlar.
+Yeni işe başlamadan önce `main` branch'inin güncel olduğundan emin ol.
 
-Bu komuttan sonra ileride aynı branch’te tekrar push atarken sadece şunu yazmak yeterli olur:
+```bash
+git checkout main
+git pull
+```
 
-bash git push 
+Bu komutlardan sonra bilgisayarındaki `main`, GitHub'daki güncel `main` ile aynı hale gelir.
 
+## 2. Yeni branch aç
 
-### 2. main branch’teki güncel değişiklikleri kendi branch’ine al
+Her yeni iş için ayrı bir branch aç.
 
-Sen çalışırken başka biri main branch’e yeni değişiklikler eklemiş olabilir. Bu yüzden kendi branch’ini güncel tutmak gerekir.
+```bash
+git checkout -b my-new-branch
+```
 
-Önce GitHub’daki son durumu bilgisayarına çek:
-
-bash git fetch origin 
-
-Sonra main branch’teki güncel değişiklikleri kendi branch’ine birleştir:
-
-bash git merge origin/main 
-
-Buradaki mantık:
-
-- git fetch origin: GitHub’daki son branch bilgilerini indirir ama çalışma dosyalarını değiştirmez.
-- git merge origin/main: GitHub’daki güncel main branch’i senin aktif branch’inle birleştirir.
-
-Bu adımın amacı, PR açmadan önce kendi branch’inin güncel main ile uyumlu olduğundan emin olmaktır.
-
-Eğer conflict çıkarsa Git, hangi dosyalarda çakışma olduğunu söyler. O dosyaları düzenleyip conflict’i çözdükten sonra:
-
-bash git add . git commit 
-
-ile merge işlemini tamamlayabilirsin.
-
----
-
-### 3. dbt proje klasörüne gir ve modelleri test et
-
-Önce dbt projesinin olduğu klasöre gir:
-
-bash cd superstore 
-
-Bu projede klasör adı farklıysa, örneğin nova ise:
-
-bash cd nova 
-
-Sonra kendi modelini ve ona bağlı modelleri çalıştır:
-
-bash uv run dbt build --select +my_mart 
-
-Burada my_mart yerine kendi model adını yazmalısın.
-
-Örnek:
-
-bash uv run dbt build --select +mart_service_kpis 
-
-Buradaki mantık:
-
-- dbt build: Modeli çalıştırır, testleri çalıştırır, varsa snapshot/seed gibi ilgili adımları da yürütür.
-- --select +my_mart: Seçtiğin modelle birlikte onun bağlı olduğu upstream modelleri de dahil eder.
-- Baştaki +, “bu modelin ihtiyaç duyduğu önceki modelleri de çalıştır” anlamına gelir.
-
-Yani sadece tek SQL dosyasını değil, o modelin bağlı olduğu zinciri de kontrol etmiş oluruz.
-
----
-
-### 4. Her şey başarılıysa branch’i tekrar push et
-
-Eğer dbt build başarılı olduysa ve son değişikliklerin commit’lendiyse branch’i GitHub’a gönder:
-
-bash git push 
-
-Eğer henüz commit atmadıysan önce:
-
-bash git status 
-
-ile değişikliklere bak.
-
-Sonra:
-
-bash git add . git commit -m "Add mart model" git push 
-
-Commit mesajını yaptığın işe göre yazmalısın.
-
-Örnek mesajlar:
-
-bash git commit -m "Add service KPI mart" git commit -m "Add staging model for interactions" git commit -m "Fix source tests" 
-
----
-
-### 5. GitHub’da Pull Request aç
-
-GitHub’da repo’ya gir.
-
-Sonra kendi branch’in için bir Pull Request aç:
-
-text base: main compare: senin-branch-adin 
-
-Örnek:
-
-text base: main compare: drk-add-marts 
-
-PR açıklamasında kısaca şunları yazmak iyi olur:
-
-text Ne yaptım? - Yeni mart modeli ekledim. - İlgili schema testlerini ekledim. - dbt build ile kontrol ettim.  Nasıl test ettim? - uv run dbt build --select +mart_service_kpis 
-
-PR, yaptığın işi main branch’e eklemeden önce kontrol etmek için kullanılır.
-
----
-
-### 6. PR merge edildikten sonra local main branch’ini güncelle
-
-PR merge edildikten sonra kendi bilgisayarındaki main branch hâlâ eski olabilir. Bu yüzden güncellemek gerekir.
-
-Önce main branch’e geç:
-
-bash git checkout main 
-
-Sonra GitHub’daki güncel main branch’i çek:
-
-bash git pull 
-
-Bu adımdan sonra bilgisayarındaki main, GitHub’daki güncel main ile aynı hale gelir.
-
----
-
-### 7. Yeni iş için yeni branch aç
-
-Her yeni iş için main branch’ten yeni bir branch açmak gerekir.
-
-Önce main branch’te olduğundan ve güncel olduğundan emin ol:
-
-bash git checkout main git pull 
-
-Sonra yeni branch aç:
-
-bash git checkout -b new-feat 
-
-Branch adını yaptığın işe göre açıklayıcı seçmek daha iyi olur.
+Branch adını yaptığın işe göre kısa ve anlaşılır seçmek iyi olur.
 
 Örnek branch adları:
 
-bash git checkout -b add-stg-users git checkout -b add-service-kpi-mart git checkout -b fix-source-tests git checkout -b add-retention-models 
+```bash
+git checkout -b add-stg-users
+git checkout -b add-service-kpi-mart
+git checkout -b fix-source-tests
+git checkout -b add-retention-models
+```
 
----
+??? info "Branch nedir?"
+
+    Branch, `main` branch'ini bozmadan kendi değişikliklerini yapabildiğin ayrı çalışma alanıdır.
+
+## 3. Değişikliklerini yap ve kontrol et
+
+Model, schema, test veya doküman değişikliklerini yaptıktan sonra ilk bakılacak komut:
+
+```bash
+git status
+```
+
+Bu komut sana hangi branch'te olduğunu, hangi dosyaların değiştiğini ve Git'in senden ne beklediğini gösterir.
+
+!!! note
+
+    Bir şey karışırsa önce `git status` çalıştır. Git çoğu zaman bir sonraki adımı burada açıklar.
+
+## 4. dbt proje klasörüne gir ve modeli test et
+
+Bu repoda dbt projesi `nova` klasörünün içinde.
+
+```bash
+cd nova
+```
+
+Sonra kendi modelini ve ona bağlı önceki modelleri çalıştır:
+
+```bash
+uv run dbt build --select +my_model
+```
+
+Burada `my_model` yerine kendi model adını yazmalısın.
+
+Örnek:
+
+```bash
+uv run dbt build --select +stg_users
+```
+
+Bu komutun mantığı:
+
+- `dbt build`: Modeli çalıştırır ve testleri de kontrol eder.
+- `--select +my_model`: Seçtiğin modelle birlikte o modelin ihtiyaç duyduğu önceki modelleri de dahil eder.
+- Baştaki `+`: "Bu modelin bağlı olduğu upstream modelleri de çalıştır" anlamına gelir.
+
+!!! note "Emin değilsen daha geniş kontrol yap"
+
+    Eğer staging veya source tarafında değişiklik yaptıysan ve hangi modellerin etkilendiğinden emin değilsen, tüm projeyi kontrol etmek daha güvenlidir:
+
+    ```bash
+    uv run dbt build
+    ```
+
+## 5. Değişiklikleri commit et
+
+dbt build başarılıysa değişikliklerini Git'e ekle.
+
+```bash
+git add .
+```
+
+İstersen sadece belirli bir dosyayı da ekleyebilirsin:
+
+```bash
+git add nova/models/staging/stg_users.sql
+```
+
+Sonra kısa ve açıklayıcı bir commit mesajı yaz:
+
+```bash
+git commit -m "Add staging model for users"
+```
+
+İyi commit mesajı örnekleri:
+
+```bash
+git commit -m "Add service KPI mart"
+git commit -m "Add staging model for interactions"
+git commit -m "Fix source tests"
+```
+
+Çok genel mesajlardan kaçın:
+
+```bash
+git commit -m "update"
+git commit -m "changes"
+git commit -m "fix"
+```
+
+## 6. PR açmadan önce branch'i güncel tut
+
+Sen çalışırken başka biri `main` branch'ine yeni değişiklikler eklemiş olabilir. PR açmadan önce kendi branch'ini güncel `main` ile birleştirmek iyi olur.
+
+Önce GitHub'daki son durumu bilgisayarına çek:
+
+```bash
+git fetch origin
+```
+
+Sonra güncel `main` branch'ini kendi aktif branch'inle birleştir:
+
+```bash
+git merge origin/main
+```
+
+Eğer conflict çıkarsa Git hangi dosyalarda çakışma olduğunu söyler. O dosyaları düzenleyip conflict'i çözdükten sonra:
+
+```bash
+git add .
+git commit
+```
+
+Conflict çözdükten sonra dbt build'i tekrar çalıştırmak iyi olur:
+
+```bash
+cd nova
+uv run dbt build --select +my_model
+```
+
+??? info "`origin` ve `-u` ne demek?"
+
+    `origin`, GitHub'daki remote repo adıdır. `-u`, local branch ile GitHub'daki branch'i birbirine bağlar. İlk push'tan sonra aynı branch'te sadece `git push` yazmak yeterli olur.
+
+## 7. Branch'i GitHub'a gönder
+
+Branch'i ilk kez GitHub'a gönderiyorsan:
+
+```bash
+git push -u origin my-new-branch
+```
+
+Aynı branch'te daha sonra tekrar push atacaksan:
+
+```bash
+git push
+```
+
+## 8. GitHub'da Pull Request aç
+
+GitHub'da repo'ya gir ve kendi branch'in için Pull Request aç.
+
+```text
+base: main
+compare: senin-branch-adin
+```
+
+Örnek:
+
+```text
+base: main
+compare: add-service-kpi-mart
+```
+
+PR açıklamasında kısaca şunları yazmak iyi olur:
+
+```text
+Ne yaptım?
+- Yeni mart modeli ekledim.
+- İlgili schema testlerini ekledim.
+- dbt build ile kontrol ettim.
+
+Nasıl test ettim?
+- uv run dbt build --select +mart_service_kpis
+```
+
+PR, yaptığın işi `main` branch'ine eklemeden önce kontrol etmek için kullanılır.
+
+## 9. PR merge edildikten sonra local main'i güncelle
+
+PR merge edildikten sonra kendi bilgisayarındaki `main` branch hâlâ eski olabilir.
+
+Önce `main` branch'e geç:
+
+```bash
+git checkout main
+```
+
+Sonra GitHub'daki güncel `main` branch'i çek:
+
+```bash
+git pull
+```
+
+Yeni bir işe başlayacaksan yine yeni branch aç:
+
+```bash
+git checkout -b next-branch
+```
 
 ## Kısa Özet
 
 Günlük çalışma akışı genelde şöyle olur:
 
-```bash 
+```bash
 # main branch'e geç (üzerinde çalıştığın branch'le işin bittiyse)
-git checkout main 
+git checkout main
 
 # main'de herhangi bir değişiklik varsa lokal repona pull et
-git pull  
+git pull
 
-# üzerinde çalışmak için yeni branch oluştur 
-git checkout -b my-new-branch  
+# üzerinde çalışmak için yeni branch oluştur
+git checkout -b my-new-branch
 
-# kod değişikliklerini yap  
+# kod değişikliklerini yap
 
 # kendi değişikliklerini + main'deki değişikliklerin durumunu kontrol et
-git status 
+git status
 
 # yaptığın & kaydettiğin dosyalardaki tüm değişiklikleri ekle
-git add . 
+git add .
 
 # alternatif: tek bir dosyayı eklemek için örnek
 git add notebooks/my_notebook.ipynb
 
 # yaptığın değişikliklere açıklayıcı ama kısa commit mesajı ekle
-git commit -m "fix revenue_model grain issue" 
+git commit -m "fix revenue_model grain issue"
 
 # kendi değişikliklerini pushlamadan önce main'dekileri al
-git fetch origin 
+git fetch origin
 
 # tüm değişikliklerle beraber main'e mergele (sonra github'dan pull request yap)
-git merge origin/main  
+git merge origin/main
 
 # dbt proje klasörüne geç
-cd nova 
+cd nova
 
 # modelini build et ve bigquery'de kontrol et
-uv run dbt build --select +my_model  
+uv run dbt build --select +my_model
 
 # branch'ini remote repoya pushla (branch'inde ilk push ise -u kullanılır, sonraki pushlarda gerek yok)
-git push -u origin my-new-branch 
-
+git push -u origin my-new-branch
 ```
 
-Sonra GitHub’da PR açılır.
+Sonra GitHub'da PR açılır.
 
 PR merge edildikten sonra:
 
-```bash 
+```bash
 # tekrar main'e geç (kendi değişikliklerin silinmiş gibi gözükecek, panik yapma)
-git checkout main 
+git checkout main
 
 # branch'inden remote repoya attığın değişiklikleri main'ine geri çek
 # (yaptığın değişiklikler geri gelecek)
-git pull 
+git pull
 
-# yeni branch 
-git checkout -b next-branch 
+# yeni branch
+git checkout -b next-branch
 ```
-
 
 ## Önemli Kurallar
 
-### 1. Doğrudan main branch’te çalışmamaya çalış
+### 1. Doğrudan main branch'te çalışmamaya çalış
 
-main branch projenin temiz ve çalışan hali olmalı. Yeni işler için ayrı branch açmak daha güvenli.
+`main` branch projenin temiz ve çalışan hali olmalı. Yeni işler için ayrı branch açmak daha güvenli.
 
-Yanlışlıkla main branch’teysen:
+Yanlışlıkla `main` branch'teysen:
 
-```bash 
-git branch 
+```bash
+git branch
 ```
 
-ile kontrol edebilirsin. Aktif branch’in yanında * işareti olur.
-
----
+Aktif branch'in yanında `*` işareti olur.
 
 ### 2. PR açmadan önce dbt build çalıştır
 
 PR açmadan önce en azından kendi modelini ve bağlı modelleri test et:
 
-```bash 
-uv run dbt build --select +my_model 
+```bash
+uv run dbt build --select +my_model
 ```
 
-Bu, bozuk SQL, eksik kaynak, başarısız test gibi hataları önceden yakalamamızı sağlar.
+Bu, bozuk SQL, eksik kaynak veya başarısız test gibi hataları önceden yakalamamızı sağlar.
 
----
-
-### 3. Branch’i güncel tut
+### 3. Branch'i güncel tut
 
 PR açmadan önce:
 
-```bash 
-git fetch origin 
-git merge origin/main 
-````
+```bash
+git fetch origin
+git merge origin/main
+```
 
 yapmak iyi bir alışkanlıktır.
 
-Böylece senin branch’in güncel main ile uyumlu olur.
+### 4. Commit mesajlarını açıklayıcı yaz
 
----
+Commit mesajı kısa olsun ama ne yaptığını anlatsın.
 
-## 4. Commit mesajlarını açıklayıcı yaz
-
-Çok genel mesajlardan kaçın:
-
-```bash 
-git commit -m "update" 
-git commit -m "changes" 
-git commit -m "fix" 
-```
-
-Bunun yerine daha açıklayıcı yaz:
-
-```bash 
+```bash
 git commit -m "Add staging model for users"
-git commit -m "Add tests for transaction source" 
+git commit -m "Add tests for transaction source"
 git commit -m "Create service KPI mart"
-``` 
-
+```
 
 ### 5. Hata çıkarsa önce git status çalıştır
 
 Bir şey karışırsa ilk bakılacak komut:
 
-bash git status 
+```bash
+git status
+```
 
-Bu komut sana hangi branch’te olduğunu, hangi dosyaların değiştiğini ve Git’in senden ne beklediğini gösterir.
+Bu komut sana hangi branch'te olduğunu, hangi dosyaların değiştiğini ve Git'in senden ne beklediğini gösterir.
