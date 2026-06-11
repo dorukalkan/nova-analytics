@@ -14,6 +14,7 @@ select
     Referral_Source as referral_source,
     GPS_Lat as gps_lat,
     GPS_Long as gps_long,
+    Timestamp_dt as timestamp,
     DATE(Timestamp_dt) AS order_date,
     TIME(Timestamp_dt) AS order_time,
     Market_ID as market_id,
