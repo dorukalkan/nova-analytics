@@ -1,0 +1,104 @@
+version: 2
+
+models:
+  - name: stg_geo_market_country_lookup
+    description: "Staging model for the reviewed Nova market-to-country lookup seed."
+    columns:
+      - name: market_id
+        description: "Nova market identifier."
+        tests:
+          - unique
+          - not_null
+      - name: market_name
+        description: "Nova market city name."
+        tests:
+          - not_null
+      - name: country_iso3
+        description: "ISO 3166-1 alpha-3 country code."
+        tests:
+          - not_null
+      - name: world_bank_country_code
+        description: "Lowercase country code used in World Bank API calls."
+        tests:
+          - not_null
+
+  - name: stg_geo_weather_daily
+    description: "Staging model for daily Open-Meteo weather by Nova market."
+    columns:
+      - name: market_id
+        description: "Nova market identifier."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_geo_market_country_lookup')
+                field: market_id
+      - name: weather_date
+        description: "Local weather date."
+        tests:
+          - not_null
+      - name: weather_code
+        description: "Open-Meteo weather condition code."
+        tests:
+          - not_null
+      - name: is_rain_day
+        description: "True when rain or precipitation is greater than zero."
+        tests:
+          - not_null
+
+  - name: stg_geo_world_bank_indicators
+    description: "Staging model for long-form World Bank macro indicators."
+    columns:
+      - name: country_iso3
+        description: "ISO 3166-1 alpha-3 country code."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_geo_market_country_lookup')
+                field: country_iso3
+      - name: indicator_code
+        description: "World Bank indicator code."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - SP.POP.TOTL
+                  - NY.GDP.PCAP.CD
+                  - SP.URB.TOTL.IN.ZS
+                  - IT.NET.USER.ZS
+                  - IT.CEL.SETS.P2
+      - name: metric_name
+        description: "Project-friendly metric name."
+        tests:
+          - not_null
+      - name: indicator_value
+        description: "Indicator value."
+        tests:
+          - not_null
+
+  - name: stg_geo_country_metadata
+    description: "Staging model for REST Countries metadata."
+    columns:
+      - name: country_iso3
+        description: "ISO 3166-1 alpha-3 country code."
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_geo_market_country_lookup')
+                field: country_iso3
+      - name: country_iso2
+        description: "ISO 3166-1 alpha-2 country code."
+        tests:
+          - not_null
+      - name: country_name_common
+        description: "Common country name."
+        tests:
+          - not_null
+      - name: currency_code
+        description: "Primary currency code."
+        tests:
+          - not_null
