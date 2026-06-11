@@ -66,6 +66,7 @@ nav = [
   ] },
   { "About" = [
     "about/dataset.md",
+    "about/api_sources.md",
     "about/team.md",
   ] },
 ]
