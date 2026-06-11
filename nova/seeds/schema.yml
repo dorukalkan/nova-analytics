@@ -1,0 +1,99 @@
+version: 2
+
+seeds:
+  - name: market_country_lookup
+    description: "Reviewed mapping from Nova city markets to country identifiers for external enrichment joins."
+    config:
+      quote_columns: false
+      column_types:
+        market_id: int64
+        market_name: string
+        country_name: string
+        country_iso2: string
+        country_iso3: string
+        world_bank_country_code: string
+        source: string
+        fetched_at_utc: timestamp
+    columns:
+      - name: market_id
+        tests:
+          - unique
+          - not_null
+      - name: country_iso3
+        tests:
+          - not_null
+
+  - name: ext_weather_daily
+    description: "Daily 2024 historical weather by Nova market from Open-Meteo."
+    config:
+      quote_columns: false
+      column_types:
+        market_id: int64
+        market_name: string
+        weather_date: date
+        weather_code: int64
+        temperature_2m_mean_c: float64
+        temperature_2m_max_c: float64
+        temperature_2m_min_c: float64
+        apparent_temperature_mean_c: float64
+        precipitation_sum_mm: float64
+        rain_sum_mm: float64
+        precipitation_hours: float64
+        wind_speed_10m_max_kmh: float64
+        is_rain_day: bool
+        source: string
+        fetched_at_utc: timestamp
+    columns:
+      - name: market_id
+        tests:
+          - not_null
+      - name: weather_date
+        tests:
+          - not_null
+
+  - name: ext_world_bank_indicators
+    description: "Latest available World Bank macro indicators by country for the Nova market countries."
+    config:
+      quote_columns: false
+      column_types:
+        country_iso3: string
+        country_name: string
+        indicator_code: string
+        metric_name: string
+        indicator_name: string
+        indicator_year: int64
+        indicator_value: float64
+        source: string
+        fetched_at_utc: timestamp
+    columns:
+      - name: country_iso3
+        tests:
+          - not_null
+      - name: indicator_code
+        tests:
+          - not_null
+
+  - name: ext_country_metadata
+    description: "Optional country metadata enrichment from REST Countries."
+    config:
+      quote_columns: false
+      column_types:
+        country_iso3: string
+        country_iso2: string
+        country_name_common: string
+        country_name_official: string
+        region: string
+        subregion: string
+        capital: string
+        currency_code: string
+        currency_name: string
+        currency_symbol: string
+        population: int64
+        timezones: string
+        source: string
+        fetched_at_utc: timestamp
+    columns:
+      - name: country_iso3
+        tests:
+          - unique
+          - not_null
