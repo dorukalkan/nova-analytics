@@ -51,6 +51,7 @@ nav = [
   "index.md",
   { "Notes" = [
     "notes/git_workflow.md",
+    "notes/geo_market_opportunity_plan.md",
   ] },
   { "Reports" = [
     "reports/corrected_data_validation.md",
@@ -58,6 +59,7 @@ nav = [
     "reports/synthetic_data_audit_tr.md",
   ] },
   { "dbt Models" = [
+    "models/seeds.md",
     "models/staging.md",
     "models/intermediate.md",
     "models/marts.md",
