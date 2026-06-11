@@ -1,0 +1,83 @@
+version: 2
+
+models:
+  - name: mart_geo_market_opportunity
+    description: "Market-level opportunity ranking for the geography opportunity atlas."
+    columns:
+      - name: market_id
+        description: "Nova market identifier."
+        tests:
+          - unique
+          - not_null
+      - name: opportunity_score
+        description: "Composite 0-100 market opportunity score."
+        tests:
+          - not_null
+      - name: opportunity_rank
+        description: "Rank by opportunity score, descending."
+        tests:
+          - not_null
+      - name: opportunity_segment
+        description: "Business-friendly opportunity segment."
+        tests:
+          - not_null
+      - name: total_transactions
+        description: "Total 2024 transactions in the market."
+        tests:
+          - not_null
+      - name: total_gmv_usd
+        description: "Total 2024 GMV in USD in the market."
+        tests:
+          - not_null
+
+  - name: mart_geo_market_category_day_features
+    description: "Market-category-day feature table for demand modeling and local demand driver analysis."
+    columns:
+      - name: market_id
+        description: "Nova market identifier."
+        tests:
+          - not_null
+      - name: category
+        description: "Nova service category."
+        tests:
+          - not_null
+      - name: order_date
+        description: "Calendar date."
+        tests:
+          - not_null
+      - name: transactions
+        description: "Daily transaction target."
+        tests:
+          - not_null
+      - name: gmv_usd
+        description: "Daily GMV target in USD."
+        tests:
+          - not_null
+      - name: weather_code
+        description: "Open-Meteo daily weather condition code."
+        tests:
+          - not_null
+      - name: is_high_demand_day
+        description: "True when transactions are at or above the market/category 75th percentile."
+        tests:
+          - not_null
+
+  - name: mart_geo_weather_category_sensitivity
+    description: "Market-category rain sensitivity and weather correlation summary for dashboard views."
+    columns:
+      - name: market_id
+        description: "Nova market identifier."
+        tests:
+          - not_null
+      - name: category
+        description: "Nova service category."
+        tests:
+          - not_null
+      - name: observed_days
+        description: "Number of observed market/category days."
+        tests:
+          - not_null
+      - name: rain_sensitivity_segment
+        description: "Business-friendly segment based on rainy vs non-rainy transaction lift."
+        tests:
+          - not_null
