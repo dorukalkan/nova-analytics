@@ -12,5 +12,6 @@ dependencies = [
     "pandas>=3.0.3",
     "plotly>=6.8.0",
     "polars>=1.41.2",
+    "python-dotenv>=1.2.2",
     "zensical>=0.0.44",
 ]
