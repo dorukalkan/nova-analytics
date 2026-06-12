@@ -10,7 +10,7 @@ models:
           - unique
           - not_null
       - name: opportunity_score
-        description: "Composite 0-100 market opportunity score."
+        description: "Composite 0-100 market opportunity score based on current performance, macro potential, supply, and country-level adoption."
         tests:
           - not_null
       - name: opportunity_rank
@@ -27,6 +27,34 @@ models:
           - not_null
       - name: total_gmv_usd
         description: "Total 2024 GMV in USD in the market."
+        tests:
+          - not_null
+      - name: annual_active_users
+        description: "Distinct users active in the market during 2024."
+        tests:
+          - not_null
+      - name: country_annual_active_users
+        description: "Distinct active users across all Nova markets in the market's country."
+        tests:
+          - not_null
+      - name: market_active_user_penetration
+        description: "Market active users divided by country population."
+        tests:
+          - not_null
+      - name: market_urban_active_user_penetration
+        description: "Market active users divided by estimated country urban population."
+        tests:
+          - not_null
+      - name: country_active_user_penetration
+        description: "Country-level active user penetration, calculated as country active users divided by country population."
+        tests:
+          - not_null
+      - name: country_urban_active_user_penetration
+        description: "Country-level active user penetration against estimated urban population."
+        tests:
+          - not_null
+      - name: adoption_score
+        description: "0-100 score based on country active-user penetration and urban active-user penetration."
         tests:
           - not_null
 

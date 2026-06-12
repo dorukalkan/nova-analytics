@@ -13,6 +13,14 @@ service_supply as (
     from {{ ref('int_geo_service_supply_by_market_category') }}
 ),
 
+annual_market_users as (
+    select
+        market_id,
+        count(distinct user_id) as annual_active_users
+    from {{ ref('stg_interactions') }}
+    group by market_id
+),
+
 annual_market_metrics as (
     select
         market_id,
@@ -143,21 +151,54 @@ joined as (
         on market_context.market_id = service_supply_by_market.market_id
 ),
 
-normalized as (
+with_adoption as (
     select
         joined.*,
+        annual_market_users.annual_active_users,
+        sum(annual_market_users.annual_active_users) over (
+            partition by joined.country_iso3
+        ) as country_annual_active_users,
+        safe_divide(
+            annual_market_users.annual_active_users,
+            nullif(joined.population_total, 0)
+        ) as market_active_user_penetration,
+        safe_divide(
+            annual_market_users.annual_active_users,
+            nullif(joined.population_total * joined.urban_population_pct / 100, 0)
+        ) as market_urban_active_user_penetration,
+        safe_divide(
+            sum(annual_market_users.annual_active_users) over (
+                partition by joined.country_iso3
+            ),
+            nullif(joined.population_total, 0)
+        ) as country_active_user_penetration,
+        safe_divide(
+            sum(annual_market_users.annual_active_users) over (
+                partition by joined.country_iso3
+            ),
+            nullif(joined.population_total * joined.urban_population_pct / 100, 0)
+        ) as country_urban_active_user_penetration
+    from joined
+    left join annual_market_users
+        on joined.market_id = annual_market_users.market_id
+),
+
+normalized as (
+    select
+        with_adoption.*,
         safe_divide(total_transactions - min(total_transactions) over (), nullif(max(total_transactions) over () - min(total_transactions) over (), 0)) as transactions_norm,
         safe_divide(total_gmv_usd - min(total_gmv_usd) over (), nullif(max(total_gmv_usd) over () - min(total_gmv_usd) over (), 0)) as gmv_norm,
         safe_divide(active_user_days - min(active_user_days) over (), nullif(max(active_user_days) over () - min(active_user_days) over (), 0)) as active_user_days_norm,
-        safe_divide(coalesce(transaction_growth_rate, 0) - min(coalesce(transaction_growth_rate, 0)) over (), nullif(max(coalesce(transaction_growth_rate, 0)) over () - min(coalesce(transaction_growth_rate, 0)) over (), 0)) as transaction_growth_norm,
         safe_divide(population_total - min(population_total) over (), nullif(max(population_total) over () - min(population_total) over (), 0)) as population_norm,
         safe_divide(gdp_per_capita_current_usd - min(gdp_per_capita_current_usd) over (), nullif(max(gdp_per_capita_current_usd) over () - min(gdp_per_capita_current_usd) over (), 0)) as gdp_per_capita_norm,
         safe_divide(urban_population_pct - min(urban_population_pct) over (), nullif(max(urban_population_pct) over () - min(urban_population_pct) over (), 0)) as urban_population_norm,
         safe_divide(internet_users_pct - min(internet_users_pct) over (), nullif(max(internet_users_pct) over () - min(internet_users_pct) over (), 0)) as internet_users_norm,
         safe_divide(mobile_subscriptions_per_100_people - min(mobile_subscriptions_per_100_people) over (), nullif(max(mobile_subscriptions_per_100_people) over () - min(mobile_subscriptions_per_100_people) over (), 0)) as mobile_subscriptions_norm,
         safe_divide(active_services - min(active_services) over (), nullif(max(active_services) over () - min(active_services) over (), 0)) as active_services_norm,
-        safe_divide(avg_service_rating - min(avg_service_rating) over (), nullif(max(avg_service_rating) over () - min(avg_service_rating) over (), 0)) as avg_service_rating_norm
-    from joined
+        safe_divide(avg_service_rating - min(avg_service_rating) over (), nullif(max(avg_service_rating) over () - min(avg_service_rating) over (), 0)) as avg_service_rating_norm,
+        safe_divide(country_active_user_penetration - min(country_active_user_penetration) over (), nullif(max(country_active_user_penetration) over () - min(country_active_user_penetration) over (), 0)) as country_active_user_penetration_norm,
+        safe_divide(country_urban_active_user_penetration - min(country_urban_active_user_penetration) over (), nullif(max(country_urban_active_user_penetration) over () - min(country_urban_active_user_penetration) over (), 0)) as country_urban_active_user_penetration_norm
+    from with_adoption
 ),
 
 scored as (
@@ -168,7 +209,7 @@ scored as (
             + coalesce(gmv_norm, 0)
             + coalesce(active_user_days_norm, 0)
         ) / 3 as current_performance_score,
-        100 * coalesce(transaction_growth_norm, 0) as growth_score,
+        100 * least(greatest(coalesce(transaction_growth_rate, 0), 0), 1) as growth_score,
         100 * (
             coalesce(population_norm, 0)
             + coalesce(gdp_per_capita_norm, 0)
@@ -180,7 +221,11 @@ scored as (
         100 * (
             coalesce(active_services_norm, 0)
             + coalesce(avg_service_rating_norm, 0)
-        ) / 2 as supply_score
+        ) / 2 as supply_score,
+        100 * (
+            coalesce(country_active_user_penetration_norm, 0)
+            + coalesce(country_urban_active_user_penetration_norm, 0)
+        ) / 2 as adoption_score
     from normalized
 ),
 
@@ -188,11 +233,10 @@ final as (
     select
         *,
         round(
-            0.30 * current_performance_score
-            + 0.20 * growth_score
-            + 0.20 * macro_potential_score
-            + 0.15 * reliability_score
-            + 0.15 * supply_score,
+            0.35 * current_performance_score
+            + 0.25 * macro_potential_score
+            + 0.20 * supply_score
+            + 0.20 * adoption_score,
             2
         ) as opportunity_score
     from scored
