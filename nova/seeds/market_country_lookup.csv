@@ -1,0 +1,17 @@
+market_id,market_name,country_name,country_iso2,country_iso3,world_bank_country_code,source,fetched_at_utc
+1,Singapore,Singapore,SG,SGP,sgp,manual_reviewed_lookup,2026-06-11T10:40:28Z
+2,Jakarta,Indonesia,ID,IDN,idn,manual_reviewed_lookup,2026-06-11T10:40:28Z
+3,Manila,Philippines,PH,PHL,phl,manual_reviewed_lookup,2026-06-11T10:40:28Z
+4,Bangkok,Thailand,TH,THA,tha,manual_reviewed_lookup,2026-06-11T10:40:28Z
+5,Ho Chi Minh City,Vietnam,VN,VNM,vnm,manual_reviewed_lookup,2026-06-11T10:40:28Z
+6,Istanbul,Turkey,TR,TUR,tur,manual_reviewed_lookup,2026-06-11T10:40:28Z
+7,Dubai,United Arab Emirates,AE,ARE,are,manual_reviewed_lookup,2026-06-11T10:40:28Z
+8,Riyadh,Saudi Arabia,SA,SAU,sau,manual_reviewed_lookup,2026-06-11T10:40:28Z
+9,London,United Kingdom,GB,GBR,gbr,manual_reviewed_lookup,2026-06-11T10:40:28Z
+10,New York,United States,US,USA,usa,manual_reviewed_lookup,2026-06-11T10:40:28Z
+11,Mexico City,Mexico,MX,MEX,mex,manual_reviewed_lookup,2026-06-11T10:40:28Z
+12,Sao Paulo,Brazil,BR,BRA,bra,manual_reviewed_lookup,2026-06-11T10:40:28Z
+13,Mumbai,India,IN,IND,ind,manual_reviewed_lookup,2026-06-11T10:40:28Z
+14,Bangalore,India,IN,IND,ind,manual_reviewed_lookup,2026-06-11T10:40:28Z
+15,Tokyo,Japan,JP,JPN,jpn,manual_reviewed_lookup,2026-06-11T10:40:28Z
+16,Sydney,Australia,AU,AUS,aus,manual_reviewed_lookup,2026-06-11T10:40:28Z

@@ -1,0 +1,76 @@
+country_iso3,country_name,indicator_code,metric_name,indicator_name,indicator_year,indicator_value,source,fetched_at_utc
+ARE,United Arab Emirates,IT.CEL.SETS.P2,mobile_subscriptions_per_100_people,Mobile cellular subscriptions (per 100 people),2024,203.206410299544,world_bank_api,2026-06-11T10:40:28Z
+ARE,United Arab Emirates,IT.NET.USER.ZS,internet_users_pct,Individuals using the Internet (% of population),2024,100,world_bank_api,2026-06-11T10:40:28Z
+ARE,United Arab Emirates,NY.GDP.PCAP.CD,gdp_per_capita_current_usd,GDP per capita (current US$),2024,50273.5060469837,world_bank_api,2026-06-11T10:40:28Z
+ARE,United Arab Emirates,SP.POP.TOTL,population_total,"Population, total",2024,10986400,world_bank_api,2026-06-11T10:40:28Z
+ARE,United Arab Emirates,SP.URB.TOTL.IN.ZS,urban_population_pct,Urban population (% of total population),2024,85.8171088279791,world_bank_api,2026-06-11T10:40:28Z
+AUS,Australia,IT.CEL.SETS.P2,mobile_subscriptions_per_100_people,Mobile cellular subscriptions (per 100 people),2024,112.581025002429,world_bank_api,2026-06-11T10:40:28Z
+AUS,Australia,IT.NET.USER.ZS,internet_users_pct,Individuals using the Internet (% of population),2024,96.13140106,world_bank_api,2026-06-11T10:40:28Z
+AUS,Australia,NY.GDP.PCAP.CD,gdp_per_capita_current_usd,GDP per capita (current US$),2024,64603.9856308464,world_bank_api,2026-06-11T10:40:28Z
+AUS,Australia,SP.POP.TOTL,population_total,"Population, total",2024,27196812,world_bank_api,2026-06-11T10:40:28Z
+AUS,Australia,SP.URB.TOTL.IN.ZS,urban_population_pct,Urban population (% of total population),2024,87.6021469990446,world_bank_api,2026-06-11T10:40:28Z
+BRA,Brazil,IT.CEL.SETS.P2,mobile_subscriptions_per_100_people,Mobile cellular subscriptions (per 100 people),2024,101.926846460424,world_bank_api,2026-06-11T10:40:28Z
+BRA,Brazil,IT.NET.USER.ZS,internet_users_pct,Individuals using the Internet (% of population),2024,84.46347227,world_bank_api,2026-06-11T10:40:28Z
+BRA,Brazil,NY.GDP.PCAP.CD,gdp_per_capita_current_usd,GDP per capita (current US$),2024,10310.5488778166,world_bank_api,2026-06-11T10:40:28Z
+BRA,Brazil,SP.POP.TOTL,population_total,"Population, total",2024,211998573,world_bank_api,2026-06-11T10:40:28Z
+BRA,Brazil,SP.URB.TOTL.IN.ZS,urban_population_pct,Urban population (% of total population),2024,87.8958549533146,world_bank_api,2026-06-11T10:40:28Z
+GBR,United Kingdom,IT.CEL.SETS.P2,mobile_subscriptions_per_100_people,Mobile cellular subscriptions (per 100 people),2024,121.643331373201,world_bank_api,2026-06-11T10:40:28Z
+GBR,United Kingdom,IT.NET.USER.ZS,internet_users_pct,Individuals using the Internet (% of population),2024,95.4720993,world_bank_api,2026-06-11T10:40:28Z
+GBR,United Kingdom,NY.GDP.PCAP.CD,gdp_per_capita_current_usd,GDP per capita (current US$),2024,53246.3676145108,world_bank_api,2026-06-11T10:40:28Z
+GBR,United Kingdom,SP.POP.TOTL,population_total,"Population, total",2024,69226000,world_bank_api,2026-06-11T10:40:28Z
+GBR,United Kingdom,SP.URB.TOTL.IN.ZS,urban_population_pct,Urban population (% of total population),2024,83.2429544416085,world_bank_api,2026-06-11T10:40:28Z
+IDN,Indonesia,IT.CEL.SETS.P2,mobile_subscriptions_per_100_people,Mobile cellular subscriptions (per 100 people),2024,122.514946500491,world_bank_api,2026-06-11T10:40:28Z
+IDN,Indonesia,IT.NET.USER.ZS,internet_users_pct,Individuals using the Internet (% of population),2024,72.78075544,world_bank_api,2026-06-11T10:40:28Z
+IDN,Indonesia,NY.GDP.PCAP.CD,gdp_per_capita_current_usd,GDP per capita (current US$),2024,4925.43048751861,world_bank_api,2026-06-11T10:40:28Z
+IDN,Indonesia,SP.POP.TOTL,population_total,"Population, total",2024,283487931,world_bank_api,2026-06-11T10:40:28Z
+IDN,Indonesia,SP.URB.TOTL.IN.ZS,urban_population_pct,Urban population (% of total population),2024,58.7509635387997,world_bank_api,2026-06-11T10:40:28Z
+IND,India,IT.CEL.SETS.P2,mobile_subscriptions_per_100_people,Mobile cellular subscriptions (per 100 people),2024,79.3526921826412,world_bank_api,2026-06-11T10:40:28Z
+IND,India,IT.NET.USER.ZS,internet_users_pct,Individuals using the Internet (% of population),2024,64.9434967,world_bank_api,2026-06-11T10:40:28Z
+IND,India,NY.GDP.PCAP.CD,gdp_per_capita_current_usd,GDP per capita (current US$),2024,2694.73780859961,world_bank_api,2026-06-11T10:40:28Z
+IND,India,SP.POP.TOTL,population_total,"Population, total",2024,1450935791,world_bank_api,2026-06-11T10:40:28Z
+IND,India,SP.URB.TOTL.IN.ZS,urban_population_pct,Urban population (% of total population),2024,35.3788972368389,world_bank_api,2026-06-11T10:40:28Z
+JPN,Japan,IT.CEL.SETS.P2,mobile_subscriptions_per_100_people,Mobile cellular subscriptions (per 100 people),2023,178.432441299977,world_bank_api,2026-06-11T10:40:28Z
+JPN,Japan,IT.NET.USER.ZS,internet_users_pct,Individuals using the Internet (% of population),2024,85.54153081,world_bank_api,2026-06-11T10:40:28Z
+JPN,Japan,NY.GDP.PCAP.CD,gdp_per_capita_current_usd,GDP per capita (current US$),2024,32487.0778047567,world_bank_api,2026-06-11T10:40:28Z
+JPN,Japan,SP.POP.TOTL,population_total,"Population, total",2024,123975371,world_bank_api,2026-06-11T10:40:28Z
+JPN,Japan,SP.URB.TOTL.IN.ZS,urban_population_pct,Urban population (% of total population),2024,92.1901718034531,world_bank_api,2026-06-11T10:40:28Z
+MEX,Mexico,IT.CEL.SETS.P2,mobile_subscriptions_per_100_people,Mobile cellular subscriptions (per 100 people),2024,116.486713265167,world_bank_api,2026-06-11T10:40:28Z
+MEX,Mexico,IT.NET.USER.ZS,internet_users_pct,Individuals using the Internet (% of population),2024,83.12233799,world_bank_api,2026-06-11T10:40:28Z
+MEX,Mexico,NY.GDP.PCAP.CD,gdp_per_capita_current_usd,GDP per capita (current US$),2024,14185.7812248529,world_bank_api,2026-06-11T10:40:28Z
+MEX,Mexico,SP.POP.TOTL,population_total,"Population, total",2024,130861007,world_bank_api,2026-06-11T10:40:28Z
+MEX,Mexico,SP.URB.TOTL.IN.ZS,urban_population_pct,Urban population (% of total population),2024,79.7538805976118,world_bank_api,2026-06-11T10:40:28Z
+PHL,Philippines,IT.CEL.SETS.P2,mobile_subscriptions_per_100_people,Mobile cellular subscriptions (per 100 people),2024,115.298749599352,world_bank_api,2026-06-11T10:40:28Z
+PHL,Philippines,IT.NET.USER.ZS,internet_users_pct,Individuals using the Internet (% of population),2024,67.26300914,world_bank_api,2026-06-11T10:40:28Z
+PHL,Philippines,NY.GDP.PCAP.CD,gdp_per_capita_current_usd,GDP per capita (current US$),2024,3984.8315387656,world_bank_api,2026-06-11T10:40:28Z
+PHL,Philippines,SP.POP.TOTL,population_total,"Population, total",2024,115843670,world_bank_api,2026-06-11T10:40:28Z
+PHL,Philippines,SP.URB.TOTL.IN.ZS,urban_population_pct,Urban population (% of total population),2024,55.4520983215477,world_bank_api,2026-06-11T10:40:28Z
+SAU,Saudi Arabia,IT.CEL.SETS.P2,mobile_subscriptions_per_100_people,Mobile cellular subscriptions (per 100 people),2024,159.541370566589,world_bank_api,2026-06-11T10:40:28Z
+SAU,Saudi Arabia,IT.NET.USER.ZS,internet_users_pct,Individuals using the Internet (% of population),2024,100,world_bank_api,2026-06-11T10:40:28Z
+SAU,Saudi Arabia,NY.GDP.PCAP.CD,gdp_per_capita_current_usd,GDP per capita (current US$),2024,35121.6628687742,world_bank_api,2026-06-11T10:40:28Z
+SAU,Saudi Arabia,SP.POP.TOTL,population_total,"Population, total",2024,35300280,world_bank_api,2026-06-11T10:40:28Z
+SAU,Saudi Arabia,SP.URB.TOTL.IN.ZS,urban_population_pct,Urban population (% of total population),2024,84.4554020211443,world_bank_api,2026-06-11T10:40:28Z
+SGP,Singapore,IT.CEL.SETS.P2,mobile_subscriptions_per_100_people,Mobile cellular subscriptions (per 100 people),2024,170.78256295407,world_bank_api,2026-06-11T10:40:28Z
+SGP,Singapore,IT.NET.USER.ZS,internet_users_pct,Individuals using the Internet (% of population),2024,94.37757178,world_bank_api,2026-06-11T10:40:28Z
+SGP,Singapore,NY.GDP.PCAP.CD,gdp_per_capita_current_usd,GDP per capita (current US$),2024,90674.066632628,world_bank_api,2026-06-11T10:40:28Z
+SGP,Singapore,SP.POP.TOTL,population_total,"Population, total",2024,6036860,world_bank_api,2026-06-11T10:40:28Z
+SGP,Singapore,SP.URB.TOTL.IN.ZS,urban_population_pct,Urban population (% of total population),2024,100,world_bank_api,2026-06-11T10:40:28Z
+THA,Thailand,IT.CEL.SETS.P2,mobile_subscriptions_per_100_people,Mobile cellular subscriptions (per 100 people),2024,160.639312286761,world_bank_api,2026-06-11T10:40:28Z
+THA,Thailand,IT.NET.USER.ZS,internet_users_pct,Individuals using the Internet (% of population),2024,90.86718789,world_bank_api,2026-06-11T10:40:28Z
+THA,Thailand,NY.GDP.PCAP.CD,gdp_per_capita_current_usd,GDP per capita (current US$),2024,7346.62022142185,world_bank_api,2026-06-11T10:40:28Z
+THA,Thailand,SP.POP.TOTL,population_total,"Population, total",2024,71668011,world_bank_api,2026-06-11T10:40:28Z
+THA,Thailand,SP.URB.TOTL.IN.ZS,urban_population_pct,Urban population (% of total population),2024,61.8689338391321,world_bank_api,2026-06-11T10:40:28Z
+TUR,Turkiye,IT.CEL.SETS.P2,mobile_subscriptions_per_100_people,Mobile cellular subscriptions (per 100 people),2024,107.826875714392,world_bank_api,2026-06-11T10:40:28Z
+TUR,Turkiye,IT.NET.USER.ZS,internet_users_pct,Individuals using the Internet (% of population),2024,87.3078767,world_bank_api,2026-06-11T10:40:28Z
+TUR,Turkiye,NY.GDP.PCAP.CD,gdp_per_capita_current_usd,GDP per capita (current US$),2024,15892.7157287241,world_bank_api,2026-06-11T10:40:28Z
+TUR,Turkiye,SP.POP.TOTL,population_total,"Population, total",2024,85518661,world_bank_api,2026-06-11T10:40:28Z
+TUR,Turkiye,SP.URB.TOTL.IN.ZS,urban_population_pct,Urban population (% of total population),2024,89.3443122873887,world_bank_api,2026-06-11T10:40:28Z
+USA,United States,IT.CEL.SETS.P2,mobile_subscriptions_per_100_people,Mobile cellular subscriptions (per 100 people),2024,113.190481805755,world_bank_api,2026-06-11T10:40:28Z
+USA,United States,IT.NET.USER.ZS,internet_users_pct,Individuals using the Internet (% of population),2024,94.69380188,world_bank_api,2026-06-11T10:40:28Z
+USA,United States,NY.GDP.PCAP.CD,gdp_per_capita_current_usd,GDP per capita (current US$),2024,84534.0407841548,world_bank_api,2026-06-11T10:40:28Z
+USA,United States,SP.POP.TOTL,population_total,"Population, total",2024,340110988,world_bank_api,2026-06-11T10:40:28Z
+USA,United States,SP.URB.TOTL.IN.ZS,urban_population_pct,Urban population (% of total population),2024,80.1247798047184,world_bank_api,2026-06-11T10:40:28Z
+VNM,Viet Nam,IT.CEL.SETS.P2,mobile_subscriptions_per_100_people,Mobile cellular subscriptions (per 100 people),2024,127.606471743496,world_bank_api,2026-06-11T10:40:28Z
+VNM,Viet Nam,IT.NET.USER.ZS,internet_users_pct,Individuals using the Internet (% of population),2024,84.15,world_bank_api,2026-06-11T10:40:28Z
+VNM,Viet Nam,NY.GDP.PCAP.CD,gdp_per_capita_current_usd,GDP per capita (current US$),2024,4717.29028732449,world_bank_api,2026-06-11T10:40:28Z
+VNM,Viet Nam,SP.POP.TOTL,population_total,"Population, total",2024,100987686,world_bank_api,2026-06-11T10:40:28Z
+VNM,Viet Nam,SP.URB.TOTL.IN.ZS,urban_population_pct,Urban population (% of total population),2024,38.4900703430176,world_bank_api,2026-06-11T10:40:28Z
