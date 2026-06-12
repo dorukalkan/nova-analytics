@@ -37,3 +37,4 @@ site/
 credentials.json
 application_default_credentials.json
 *service-account*.json
+dbt_internal_packages/
