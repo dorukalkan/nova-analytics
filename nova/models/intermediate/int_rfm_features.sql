@@ -5,18 +5,27 @@ with customer_metrics as (
 
 ),
 
+max_order_date as (
+
+    select
+        max(last_order_date) as reference_date
+    from customer_metrics
+
+),
+
 rfm_features as (
 
     select
-        user_id,
+        cm.user_id,
 
-        date_diff(current_date(), last_order_date, day) as recency,
+        date_diff(mod.reference_date, cm.last_order_date, day) as recency,
 
-        transaction_count as frequency,
+        cm.transaction_count as frequency,
 
-        total_spend as monetary
+        cm.total_spend as monetary
 
-    from customer_metrics
+    from customer_metrics cm
+    cross join max_order_date mod
 
 )
 
