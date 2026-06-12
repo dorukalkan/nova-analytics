@@ -16,6 +16,7 @@ service_interactions as (
         interactions.category,
         services.rating,
         interactions.status,
+        interactions.timestamp,
         interactions.order_date,
         interactions.order_time,
         interactions.amount,

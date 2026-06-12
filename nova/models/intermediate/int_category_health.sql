@@ -8,6 +8,8 @@ category_health as (
         category,
         count(distinct service_id) as service_count,
         sum(interaction_count) as total_interaction_count,
+        sum(total_amount_usd) as total_amount_usd,
+        safe_divide(sum(total_amount_usd), sum(interaction_count)) as avg_amount_usd,
         avg(success_rate) as avg_success_rate,
         avg(failure_rate) as avg_failure_rate,
         avg(refund_rate) as avg_refund_rate,
