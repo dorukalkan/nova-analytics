@@ -1,0 +1,16 @@
+country_iso3,country_iso2,country_name_common,country_name_official,region,subregion,capital,currency_code,currency_name,currency_symbol,population,timezones,source,fetched_at_utc
+ARE,AE,United Arab Emirates,United Arab Emirates,Asia,Western Asia,Abu Dhabi,AED,United Arab Emirates dirham,د.إ,11027129,UTC+04:00,rest_countries_api,2026-06-11T10:49:02Z
+AUS,AU,Australia,Commonwealth of Australia,Oceania,Australia and New Zealand,Canberra,AUD,Australian dollar,$,27724744,UTC+05:00|UTC+06:30|UTC+07:00|UTC+08:00|UTC+09:30|UTC+10:00|UTC+10:30|UTC+11:30,rest_countries_api,2026-06-11T10:49:02Z
+BRA,BR,Brazil,Federative Republic of Brazil,Americas,South America,Brasília,BRL,Brazilian real,R$,213421037,UTC-05:00|UTC-04:00|UTC-03:00|UTC-02:00,rest_countries_api,2026-06-11T10:49:02Z
+GBR,GB,United Kingdom,United Kingdom of Great Britain and Northern Ireland,Europe,Northern Europe,London,GBP,British pound,£,66912637,UTC-08:00|UTC-05:00|UTC-04:00|UTC-03:00|UTC-02:00|UTC|UTC+01:00|UTC+02:00|UTC+06:00,rest_countries_api,2026-06-11T10:49:02Z
+IDN,ID,Indonesia,Republic of Indonesia,Asia,South-Eastern Asia,Jakarta,IDR,Indonesian rupiah,Rp,288315089,UTC+07:00|UTC+08:00|UTC+09:00,rest_countries_api,2026-06-11T10:49:02Z
+IND,IN,India,Republic of India,Asia,Southern Asia,New Delhi,INR,Indian rupee,₹,1380004385,UTC+05:30,rest_countries_api,2026-06-11T10:49:02Z
+JPN,JP,Japan,Japan,Asia,Eastern Asia,Tokyo,JPY,Japanese yen,¥,122950000,UTC+09:00,rest_countries_api,2026-06-11T10:49:02Z
+MEX,MX,Mexico,United Mexican States,Americas,North America,Mexico City,MXN,Mexican peso,$,134407258,UTC-08:00|UTC-07:00|UTC-06:00,rest_countries_api,2026-06-11T10:49:02Z
+PHL,PH,Philippines,Republic of the Philippines,Asia,South-Eastern Asia,Manila,PHP,Philippine peso,₱,112729484,UTC+08:00,rest_countries_api,2026-06-11T10:49:02Z
+SAU,SA,Saudi Arabia,Kingdom of Saudi Arabia,Asia,Western Asia,Riyadh,SAR,Saudi riyal,ر.س,33702731,UTC+03:00,rest_countries_api,2026-06-11T10:49:02Z
+SGP,SG,Singapore,Republic of Singapore,Asia,South-Eastern Asia,Singapore,SGD,Singapore dollar,$,5850342,UTC+08:00,rest_countries_api,2026-06-11T10:49:02Z
+THA,TH,Thailand,Kingdom of Thailand,Asia,South-Eastern Asia,Bangkok,THB,Thai baht,฿,65975198,UTC+07:00,rest_countries_api,2026-06-11T10:49:02Z
+TUR,TR,Turkey,Republic of Türkiye,Asia,Western Asia,Ankara,TRY,Turkish lira,₺,84339067,UTC+03:00,rest_countries_api,2026-06-11T10:49:02Z
+USA,US,United States,United States of America,Americas,North America,"Washington, D.C.",USD,United States dollar,$,331002651,UTC-12:00|UTC-11:00|UTC-10:00|UTC-09:00|UTC-08:00|UTC-07:00|UTC-06:00|UTC-05:00|UTC-04:00|UTC+10:00|UTC+12:00,rest_countries_api,2026-06-11T10:49:02Z
+VNM,VN,Vietnam,Socialist Republic of Vietnam,Asia,South-Eastern Asia,Hanoi,VND,Vietnamese đồng,₫,97338583,UTC+07:00,rest_countries_api,2026-06-11T10:49:02Z
