@@ -11,6 +11,8 @@ user_service_repeat_behavior as (
         any_value(category) as category,
         any_value(rating) as rating,
         count(*) as interaction_count,
+        sum(amount) as total_amount_usd,
+        avg(amount) as avg_amount_usd,
         min(timestamp) as first_interaction_at,
         max(timestamp) as last_interaction_at,
         count(*) > 1 as is_repeat_user_service,
