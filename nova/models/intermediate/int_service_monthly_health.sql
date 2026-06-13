@@ -9,6 +9,13 @@ service_monthly_health as (
         service_id,
         any_value(category) as category,
         any_value(rating) as rating,
+        any_value(market_id) as market_id,
+        any_value(market_name) as market_name,
+        any_value(region) as region,
+        any_value(country_name) as country_name,
+        any_value(country_iso2) as country_iso2,
+        any_value(country_iso3) as country_iso3,
+        any_value(world_bank_country_code) as world_bank_country_code,
         count(*) as interaction_count,
         sum(amount) as total_amount_usd,
         avg(amount) as avg_amount_usd,
@@ -25,6 +32,7 @@ service_monthly_health as (
         safe_divide(countif(status = 'Failed'), count(*)) as failure_rate,
         safe_divide(countif(status = 'Refunded'), count(*)) as refund_rate,
         safe_divide(sum(if(status = 'Completed', amount, 0)), sum(amount)) as amount_success_rate,
+        safe_divide(sum(if(status = 'Failed', amount, 0)), sum(amount)) as failed_amount_rate,
         safe_divide(sum(if(status = 'Refunded', amount, 0)), sum(amount)) as refund_amount_rate
     from service_interactions
     group by
