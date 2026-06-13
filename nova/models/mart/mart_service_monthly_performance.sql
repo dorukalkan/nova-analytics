@@ -9,6 +9,13 @@ monthly_enriched as (
         service_id,
         category,
         rating,
+        market_id,
+        market_name,
+        region,
+        country_name,
+        country_iso2,
+        country_iso3,
+        world_bank_country_code,
         interaction_count,
         total_amount_usd,
         avg_amount_usd,
@@ -25,6 +32,7 @@ monthly_enriched as (
         failure_rate,
         refund_rate,
         amount_success_rate,
+        failed_amount_rate,
         refund_amount_rate,
         safe_divide(
             total_amount_usd,
@@ -51,11 +59,52 @@ monthly_enriched as (
             order by month
             rows between 2 preceding and current row
         ) as rolling_3m_amount_usd,
-        avg(success_rate) over (
+        safe_divide(
+            sum(completed_count) over (
+                partition by service_id
+                order by month
+                rows between 2 preceding and current row
+            ),
+            sum(interaction_count) over (
+                partition by service_id
+                order by month
+                rows between 2 preceding and current row
+            )
+        ) as rolling_3m_success_rate,
+        sum(total_amount_usd) over (
             partition by service_id
             order by month
-            rows between 2 preceding and current row
-        ) as rolling_3m_success_rate
+            rows between 5 preceding and current row
+        ) as rolling_6m_amount_usd,
+        safe_divide(
+            sum(completed_count) over (
+                partition by service_id
+                order by month
+                rows between 5 preceding and current row
+            ),
+            sum(interaction_count) over (
+                partition by service_id
+                order by month
+                rows between 5 preceding and current row
+            )
+        ) as rolling_6m_success_rate,
+        sum(total_amount_usd) over (
+            partition by service_id
+            order by month
+            rows between 11 preceding and current row
+        ) as rolling_12m_amount_usd,
+        safe_divide(
+            sum(completed_count) over (
+                partition by service_id
+                order by month
+                rows between 11 preceding and current row
+            ),
+            sum(interaction_count) over (
+                partition by service_id
+                order by month
+                rows between 11 preceding and current row
+            )
+        ) as rolling_12m_success_rate
     from service_monthly_health
 ),
 
@@ -65,6 +114,13 @@ service_monthly_performance as (
         service_id,
         category,
         rating,
+        market_id,
+        market_name,
+        region,
+        country_name,
+        country_iso2,
+        country_iso3,
+        world_bank_country_code,
         interaction_count,
         total_amount_usd,
         avg_amount_usd,
@@ -81,6 +137,7 @@ service_monthly_performance as (
         failure_rate,
         refund_rate,
         amount_success_rate,
+        failed_amount_rate,
         refund_amount_rate,
         monthly_amount_share,
         monthly_amount_rank_in_category,
@@ -98,7 +155,11 @@ service_monthly_performance as (
         previous_month_success_rate,
         success_rate - previous_month_success_rate as success_rate_mom_change,
         rolling_3m_amount_usd,
-        rolling_3m_success_rate
+        rolling_3m_success_rate,
+        rolling_6m_amount_usd,
+        rolling_6m_success_rate,
+        rolling_12m_amount_usd,
+        rolling_12m_success_rate
     from monthly_enriched
 )
 
