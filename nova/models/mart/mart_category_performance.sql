@@ -53,6 +53,7 @@ category_performance as (
         safe_divide(category_rollup.failed_count, category_health.total_interaction_count) as weighted_failure_rate,
         safe_divide(category_rollup.refunded_count, category_health.total_interaction_count) as weighted_refund_rate,
         safe_divide(category_rollup.completed_amount_usd, category_health.total_amount_usd) as amount_success_rate,
+        safe_divide(category_rollup.failed_amount_usd, category_health.total_amount_usd) as failed_amount_rate,
         safe_divide(category_rollup.refunded_amount_usd, category_health.total_amount_usd) as refund_amount_rate,
         safe_divide(
             category_health.total_amount_usd,
