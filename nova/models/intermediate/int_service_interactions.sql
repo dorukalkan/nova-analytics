@@ -5,7 +5,7 @@ with interactions as (
 
 services as (
     select *
-    from {{ ref('stg_services') }}
+    from {{ ref('int_services_enriched') }}
 ),
 
 service_interactions as (
@@ -15,6 +15,13 @@ service_interactions as (
         interactions.service_id,
         interactions.category,
         services.rating,
+        services.market_id,
+        services.market_name,
+        services.region,
+        services.country_name,
+        services.country_iso2,
+        services.country_iso3,
+        services.world_bank_country_code,
         interactions.status,
         interactions.timestamp,
         interactions.order_date,
