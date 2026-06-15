@@ -16,11 +16,53 @@ import yaml
 CATEGORIES = ["Food Delivery", "Ride Hailing", "E-Commerce", "Grocery", "Digital Wallet"]
 REFERRAL_SOURCES = ["Organic Search", "Friend Referral", "Email Promo", "Social Ad", "Push Notification"]
 
+TROPICAL_MONSOON_MARKETS = {1, 2, 3, 4, 5, 13}
+ARID_HEAT_MARKETS = {7, 8}
+TEMPERATE_SEASONAL_MARKETS = {6, 9, 10, 11, 12, 14, 15, 16}
+
+MARKET_CATEGORY_AFFINITY = {
+    1: {"Food Delivery": 1.08, "Ride Hailing": 0.92, "E-Commerce": 1.20, "Grocery": 1.18, "Digital Wallet": 1.05},
+    2: {"Food Delivery": 1.18, "Ride Hailing": 1.18, "E-Commerce": 0.88, "Grocery": 0.92, "Digital Wallet": 1.22},
+    3: {"Food Delivery": 1.22, "Ride Hailing": 1.05, "E-Commerce": 0.94, "Grocery": 0.92, "Digital Wallet": 1.14},
+    4: {"Food Delivery": 1.24, "Ride Hailing": 1.08, "E-Commerce": 0.92, "Grocery": 0.96, "Digital Wallet": 1.02},
+    5: {"Food Delivery": 1.28, "Ride Hailing": 1.12, "E-Commerce": 0.86, "Grocery": 0.90, "Digital Wallet": 1.16},
+    6: {"Food Delivery": 1.12, "Ride Hailing": 1.08, "E-Commerce": 1.02, "Grocery": 1.10, "Digital Wallet": 0.86},
+    7: {"Food Delivery": 0.96, "Ride Hailing": 1.18, "E-Commerce": 1.18, "Grocery": 1.12, "Digital Wallet": 0.88},
+    8: {"Food Delivery": 0.92, "Ride Hailing": 1.22, "E-Commerce": 1.12, "Grocery": 1.08, "Digital Wallet": 0.92},
+    9: {"Food Delivery": 0.90, "Ride Hailing": 0.92, "E-Commerce": 1.28, "Grocery": 1.08, "Digital Wallet": 0.90},
+    10: {"Food Delivery": 0.96, "Ride Hailing": 1.02, "E-Commerce": 1.30, "Grocery": 0.98, "Digital Wallet": 0.88},
+    11: {"Food Delivery": 1.10, "Ride Hailing": 1.16, "E-Commerce": 0.96, "Grocery": 0.98, "Digital Wallet": 1.10},
+    12: {"Food Delivery": 1.08, "Ride Hailing": 1.18, "E-Commerce": 1.00, "Grocery": 1.00, "Digital Wallet": 0.98},
+    13: {"Food Delivery": 1.08, "Ride Hailing": 1.20, "E-Commerce": 0.96, "Grocery": 0.90, "Digital Wallet": 1.34},
+    14: {"Food Delivery": 0.98, "Ride Hailing": 1.16, "E-Commerce": 1.12, "Grocery": 0.94, "Digital Wallet": 1.26},
+    15: {"Food Delivery": 0.86, "Ride Hailing": 0.92, "E-Commerce": 1.32, "Grocery": 1.16, "Digital Wallet": 0.92},
+    16: {"Food Delivery": 0.92, "Ride Hailing": 0.96, "E-Commerce": 1.20, "Grocery": 1.20, "Digital Wallet": 0.88},
+}
+
+MARKET_AMOUNT_MULTIPLIER = np.array(
+    [1.00, 1.10, 0.82, 0.86, 0.88, 0.78, 0.86, 1.22, 1.12, 1.42, 1.38, 0.74, 0.72, 0.60, 0.66, 1.18, 1.28],
+    dtype=np.float64,
+)
+
+MARKET_COMPLETION_ADJUSTMENT = np.array(
+    [0.0, 0.006, -0.010, -0.008, -0.006, -0.004, -0.003, 0.004, -0.002, 0.008, 0.010, -0.012, -0.009, -0.014, -0.011, 0.007, 0.006],
+    dtype=np.float64,
+)
+
 
 @dataclass(frozen=True)
 class Paths:
     raw_dir: Path
     output_dir: Path
+
+
+@dataclass(frozen=True)
+class WeatherEffects:
+    enabled: bool
+    start_date: np.datetime64
+    demand_multiplier: np.ndarray
+    amount_multiplier: np.ndarray
+    completion_adjustment: np.ndarray
 
 
 def parse_args() -> argparse.Namespace:
@@ -29,6 +71,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", default=None)
     parser.add_argument("--target-rows", type=int, default=None)
     parser.add_argument("--batch-size", type=int, default=None)
+    parser.add_argument("--enable-weather-effects", action="store_true")
+    parser.add_argument("--enable-fraud-behavior", action="store_true")
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
 
@@ -75,6 +119,128 @@ def normalize(values: np.ndarray) -> np.ndarray:
     if total <= 0:
         return np.full(len(values), 1.0 / len(values))
     return values / total
+
+
+def category_index(values: np.ndarray) -> np.ndarray:
+    index = np.full(len(values), CATEGORIES.index("Digital Wallet"), dtype=np.int16)
+    for position, category in enumerate(CATEGORIES):
+        index[values == category] = position
+    return index
+
+
+def category_affinity_vector(market_id: int) -> np.ndarray:
+    affinity = MARKET_CATEGORY_AFFINITY[int(market_id)]
+    return np.array([affinity[category] for category in CATEGORIES], dtype=np.float64)
+
+
+def market_category_probs(config: dict, month_key: str, market_id: int) -> np.ndarray:
+    return normalize(category_probs_for_month(config, month_key) * category_affinity_vector(market_id))
+
+
+def market_month_multiplier(month: date, market_id: int) -> float:
+    month_number = month.month
+    region_like = {
+        "sea": {1, 2, 3, 4, 5},
+        "emea": {6, 7, 8},
+        "west": {9, 10, 16},
+        "latam": {11, 12},
+        "india": {13, 14},
+        "east_asia": {15},
+    }
+    multiplier = 1.0
+    if market_id in region_like["sea"] and month_number in (6, 7, 8, 9):
+        multiplier *= 1.03 + 0.01 * ((market_id % 3) - 1)
+    if market_id in region_like["emea"] and month_number in (7, 8):
+        multiplier *= 0.94 if market_id in (7, 8) else 1.02
+    if market_id in region_like["west"] and month_number in (11, 12):
+        multiplier *= 1.06 if market_id in (9, 10) else 1.03
+    if market_id in region_like["latam"] and month_number in (5, 6, 7):
+        multiplier *= 1.04
+    if market_id in region_like["india"] and month_number in (9, 10, 11):
+        multiplier *= 1.05
+    if market_id in region_like["east_asia"] and month_number in (3, 4, 12):
+        multiplier *= 1.04
+    multiplier *= 1.0 + ((market_id % 5) - 2) * 0.006
+    return multiplier
+
+
+def user_activity_multiplier(segment: np.ndarray, lifecycle: np.ndarray, membership: np.ndarray) -> np.ndarray:
+    segment_multiplier = np.select(
+        [
+            segment == "New",
+            segment == "Casual",
+            segment == "Regular",
+            segment == "Power",
+        ],
+        [0.80, 0.42, 1.35, 5.70],
+        default=0.04,
+    ).astype(np.float64)
+    lifecycle_multiplier = np.select(
+        [
+            lifecycle == "High Value",
+            lifecycle == "Retained",
+            lifecycle == "At Risk",
+            lifecycle == "New Active",
+            lifecycle == "Inactive",
+        ],
+        [1.18, 1.00, 0.68, 0.82, 0.05],
+        default=1.0,
+    ).astype(np.float64)
+    membership_multiplier = np.select(
+        [
+            membership == "Platinum",
+            membership == "Gold",
+            membership == "Standard",
+        ],
+        [1.35, 1.16, 1.00],
+        default=1.0,
+    ).astype(np.float64)
+    return segment_multiplier * lifecycle_multiplier * membership_multiplier
+
+
+def user_amount_multiplier(membership: np.ndarray, lifecycle: np.ndarray) -> np.ndarray:
+    membership_multiplier = np.select(
+        [
+            membership == "Platinum",
+            membership == "Gold",
+            membership == "Standard",
+        ],
+        [1.18, 1.08, 1.00],
+        default=1.0,
+    ).astype(np.float64)
+    lifecycle_multiplier = np.select(
+        [
+            lifecycle == "High Value",
+            lifecycle == "At Risk",
+            lifecycle == "New Active",
+            lifecycle == "Inactive",
+        ],
+        [1.10, 0.92, 0.96, 0.86],
+        default=1.0,
+    ).astype(np.float64)
+    return membership_multiplier * lifecycle_multiplier
+
+
+def user_completion_adjustment(membership: np.ndarray, lifecycle: np.ndarray) -> np.ndarray:
+    membership_adjustment = np.select(
+        [
+            membership == "Platinum",
+            membership == "Gold",
+        ],
+        [0.010, 0.005],
+        default=0.0,
+    ).astype(np.float64)
+    lifecycle_adjustment = np.select(
+        [
+            lifecycle == "High Value",
+            lifecycle == "At Risk",
+            lifecycle == "New Active",
+            lifecycle == "Inactive",
+        ],
+        [0.004, -0.018, -0.008, -0.025],
+        default=0.0,
+    ).astype(np.float64)
+    return membership_adjustment + lifecycle_adjustment
 
 
 def create_markets(config: dict) -> pl.DataFrame:
@@ -137,11 +303,21 @@ def generate_users(raw_users: pl.DataFrame, markets: pl.DataFrame, config: dict,
     join_dates[old_mask] = random_dates(rng, date(2022, 1, 1), date(2023, 12, 31), int(old_mask.sum()))
 
     membership = np.full(n_users, "Standard", dtype=object)
-    power_mask = user_segment == "Power"
-    regular_mask = user_segment == "Regular"
-    membership[regular_mask & (rng.random(n_users) < 0.28)] = "Gold"
-    membership[power_mask & (rng.random(n_users) < 0.52)] = "Gold"
-    membership[power_mask & (rng.random(n_users) < 0.30)] = "Platinum"
+    for segment, probs in {
+        "Dormant": [0.96, 0.04, 0.00],
+        "Casual": [0.90, 0.09, 0.01],
+        "Regular": [0.58, 0.34, 0.08],
+        "Power": [0.22, 0.46, 0.32],
+        "New": [0.93, 0.07, 0.00],
+    }.items():
+        mask = user_segment == segment
+        if mask.any():
+            membership[mask] = weighted_choice(
+                rng,
+                np.array(["Standard", "Gold", "Platinum"], dtype=object),
+                np.array(probs, dtype=np.float64),
+                int(mask.sum()),
+            )
 
     acquisition_probs = np.array([0.32, 0.20, 0.16, 0.22, 0.10])
     acquisition = weighted_choice(rng, np.array(REFERRAL_SOURCES, dtype=object), acquisition_probs, n_users)
@@ -156,7 +332,9 @@ def generate_users(raw_users: pl.DataFrame, markets: pl.DataFrame, config: dict,
     lifecycle[user_segment == "Dormant"] = "Inactive"
     lifecycle[user_segment == "New"] = "New Active"
     lifecycle[user_segment == "Power"] = "High Value"
-    at_risk_mask = (user_segment == "Casual") & (rng.random(n_users) < 0.28)
+    at_risk_mask = ((user_segment == "Casual") & (rng.random(n_users) < 0.32)) | (
+        (user_segment == "Regular") & (membership == "Standard") & (rng.random(n_users) < 0.07)
+    )
     lifecycle[at_risk_mask] = "At Risk"
 
     return pl.DataFrame(
@@ -189,8 +367,13 @@ def generate_services(raw_services: pl.DataFrame, markets: pl.DataFrame, config:
     regions = market_lookup["Region"].to_numpy()
     market_index = service_market_ids - 1
 
-    category_weights = normalize(np.array([config["categories"][category]["base_share"] for category in CATEGORIES]))
-    categories = weighted_choice(rng, np.array(CATEGORIES, dtype=object), category_weights, n_services)
+    categories = np.empty(n_services, dtype=object)
+    base_category_weights = np.array([config["categories"][category]["base_share"] for category in CATEGORIES], dtype=np.float64)
+    for market_id in market_ids:
+        mask = service_market_ids == market_id
+        if mask.any():
+            category_weights = normalize(base_category_weights * category_affinity_vector(int(market_id)))
+            categories[mask] = weighted_choice(rng, np.array(CATEGORIES, dtype=object), category_weights, int(mask.sum()))
 
     tier_names = np.array(list(config["service_tiers"].keys()), dtype=object)
     tier_probs = normalize(np.array(list(config["service_tiers"].values()), dtype=np.float64))
@@ -232,6 +415,7 @@ def build_lookup_arrays(users: pl.DataFrame, services: pl.DataFrame, markets: pl
         "user_market_ids": users_sorted["Market_ID"].to_numpy(),
         "user_segments": users_sorted["User_Segment"].to_numpy(),
         "lifecycle_segments": users_sorted["Lifecycle_Segment"].to_numpy(),
+        "membership_tiers": users_sorted["Membership_Tier"].to_numpy(),
         "primary_devices": users_sorted["Primary_Device"].to_numpy(),
         "acquisition_sources": users_sorted["Acquisition_Source"].to_numpy(),
         "service_ids": services_sorted["Service_ID"].to_numpy(),
@@ -249,17 +433,9 @@ def build_lookup_arrays(users: pl.DataFrame, services: pl.DataFrame, markets: pl
 
 
 def user_weight(segment: np.ndarray, membership: np.ndarray | None = None) -> np.ndarray:
-    weights = np.select(
-        [
-            segment == "New",
-            segment == "Casual",
-            segment == "Regular",
-            segment == "Power",
-        ],
-        [0.75, 0.38, 1.45, 5.80],
-        default=0.0,
-    ).astype(np.float64)
-    return weights
+    if membership is None:
+        membership = np.full(len(segment), "Standard", dtype=object)
+    return user_activity_multiplier(segment, np.full(len(segment), "Retained", dtype=object), membership)
 
 
 def precompute_user_pools(lookup: dict, months: list[date]) -> dict[tuple[str, int], tuple[np.ndarray, np.ndarray]]:
@@ -268,7 +444,9 @@ def precompute_user_pools(lookup: dict, months: list[date]) -> dict[tuple[str, i
     join_dates = lookup["user_join_dates"]
     market_ids = lookup["user_market_ids"]
     segments = lookup["user_segments"]
-    weights = user_weight(segments)
+    lifecycle = lookup["lifecycle_segments"]
+    membership = lookup["membership_tiers"]
+    weights = user_activity_multiplier(segments, lifecycle, membership)
     for month in months:
         month_end = np.datetime64(date(month.year, month.month, calendar.monthrange(month.year, month.month)[1]))
         for market_id in range(1, 17):
@@ -325,6 +503,198 @@ def day_probabilities(month: date, category: str) -> tuple[np.ndarray, np.ndarra
     return dates, weekdays, normalize(weights)
 
 
+def empty_weather_effects(config: dict) -> WeatherEffects:
+    start = np.datetime64(datetime.strptime(config["dates"]["start"], "%Y-%m-%d").date())
+    end = np.datetime64(datetime.strptime(config["dates"]["end"], "%Y-%m-%d").date())
+    n_days = int((end - start).astype("timedelta64[D]").astype(int)) + 1
+    shape = (17, n_days, len(CATEGORIES))
+    return WeatherEffects(
+        enabled=False,
+        start_date=start,
+        demand_multiplier=np.ones(shape, dtype=np.float64),
+        amount_multiplier=np.ones(shape, dtype=np.float64),
+        completion_adjustment=np.zeros(shape, dtype=np.float64),
+    )
+
+
+def load_weather_effects(config: dict, enabled: bool) -> WeatherEffects:
+    effects = empty_weather_effects(config)
+    if not enabled:
+        return effects
+
+    weather_path = Path(config["paths"].get("weather_seed", "nova/seeds/ext_weather_daily.csv"))
+    if not weather_path.exists():
+        raise SystemExit(f"Weather effects requested, but {weather_path} does not exist.")
+
+    weather = (
+        pl.read_csv(weather_path, try_parse_dates=True)
+        .with_columns(pl.col("weather_date").dt.strftime("%Y-%m").alias("month_key"))
+        .with_columns(
+            [
+                pl.col("precipitation_sum_mm").fill_null(0.0),
+                pl.col("wind_speed_10m_max_kmh").fill_null(0.0),
+                pl.col("temperature_2m_mean_c").fill_null(strategy="mean"),
+            ]
+        )
+    )
+    monthly = weather.group_by(["market_id", "month_key"]).agg(
+        pl.col("temperature_2m_mean_c").mean().alias("month_temp_mean"),
+        pl.col("temperature_2m_mean_c").quantile(0.10).alias("month_temp_p10"),
+        pl.col("temperature_2m_mean_c").quantile(0.90).alias("month_temp_p90"),
+    )
+    market_quantiles = weather.group_by("market_id").agg(
+        pl.col("precipitation_sum_mm").quantile(0.70).alias("market_precip_p70"),
+        pl.col("precipitation_sum_mm").quantile(0.90).alias("market_precip_p90"),
+        pl.col("wind_speed_10m_max_kmh").quantile(0.90).alias("market_wind_p90"),
+    )
+    enriched = (
+        weather.join(monthly, on=["market_id", "month_key"], how="left")
+        .join(market_quantiles, on="market_id", how="left")
+        .with_columns(
+            [
+                (
+                    pl.col("is_rain_day")
+                    & (pl.col("precipitation_sum_mm") < pl.max_horizontal(pl.col("market_precip_p70"), pl.lit(3.0)))
+                ).alias("is_light_rain"),
+                (
+                    pl.col("is_rain_day")
+                    & (pl.col("precipitation_sum_mm") >= pl.max_horizontal(pl.col("market_precip_p70"), pl.lit(3.0)))
+                    & (pl.col("precipitation_sum_mm") < pl.max_horizontal(pl.col("market_precip_p90"), pl.lit(8.0)))
+                ).alias("is_moderate_rain"),
+                (pl.col("precipitation_sum_mm") >= pl.max_horizontal(pl.col("market_precip_p90"), pl.lit(8.0))).alias("is_heavy_rain"),
+                (pl.col("temperature_2m_mean_c") >= pl.col("month_temp_p90")).alias("is_extreme_heat"),
+                (pl.col("temperature_2m_mean_c") <= pl.col("month_temp_p10")).alias("is_extreme_cold"),
+                (pl.col("wind_speed_10m_max_kmh") >= pl.max_horizontal(pl.col("market_wind_p90"), pl.lit(28.0))).alias("is_high_wind"),
+            ]
+        )
+    )
+
+    demand = effects.demand_multiplier.copy()
+    amount = effects.amount_multiplier.copy()
+    completion = effects.completion_adjustment.copy()
+    start = effects.start_date
+
+    for row in enriched.iter_rows(named=True):
+        market_id = int(row["market_id"])
+        day_index = int((np.datetime64(row["weather_date"]) - start).astype("timedelta64[D]").astype(int))
+        if day_index < 0 or day_index >= demand.shape[1]:
+            continue
+
+        is_rain = bool(row["is_rain_day"])
+        is_light_rain = bool(row["is_light_rain"])
+        is_moderate_rain = bool(row["is_moderate_rain"])
+        is_heavy_rain = bool(row["is_heavy_rain"])
+        is_extreme_heat = bool(row["is_extreme_heat"])
+        is_extreme_cold = bool(row["is_extreme_cold"])
+        is_high_wind = bool(row["is_high_wind"])
+        is_storm_like = is_heavy_rain and is_high_wind
+        is_bad_weather = is_heavy_rain or is_extreme_heat or is_extreme_cold or is_high_wind
+
+        if market_id in TROPICAL_MONSOON_MARKETS:
+            rain_sensitivity = 0.78 if not is_heavy_rain else 1.05
+            heat_sensitivity = 0.92
+            cold_sensitivity = 0.55
+            wind_sensitivity = 0.95
+        elif market_id in ARID_HEAT_MARKETS:
+            rain_sensitivity = 1.18
+            heat_sensitivity = 1.35
+            cold_sensitivity = 0.45
+            wind_sensitivity = 1.05
+        elif market_id in TEMPERATE_SEASONAL_MARKETS:
+            rain_sensitivity = 1.04
+            heat_sensitivity = 1.00
+            cold_sensitivity = 1.18
+            wind_sensitivity = 1.10
+        else:
+            rain_sensitivity = 1.0
+            heat_sensitivity = 1.0
+            cold_sensitivity = 1.0
+            wind_sensitivity = 1.0
+
+        for cat_pos, category in enumerate(CATEGORIES):
+            demand_factor = 1.0
+            amount_factor = 1.0
+            completion_delta = 0.0
+
+            if category == "Ride Hailing":
+                demand_factor += 0.04 * rain_sensitivity if is_light_rain else 0.0
+                demand_factor += 0.11 * rain_sensitivity if is_moderate_rain else 0.0
+                demand_factor += 0.22 * rain_sensitivity if is_heavy_rain else 0.0
+                demand_factor += 0.07 * heat_sensitivity if is_extreme_heat else 0.0
+                demand_factor += 0.06 * cold_sensitivity if is_extreme_cold else 0.0
+                completion_delta -= 0.014 if is_bad_weather else 0.0
+                completion_delta -= 0.018 * wind_sensitivity if is_high_wind else 0.0
+                completion_delta -= 0.008 if is_storm_like else 0.0
+            elif category == "Food Delivery":
+                demand_factor += 0.03 * rain_sensitivity if is_light_rain else 0.0
+                demand_factor += 0.08 * rain_sensitivity if is_moderate_rain else 0.0
+                demand_factor += 0.17 * rain_sensitivity if is_heavy_rain else 0.0
+                demand_factor += 0.09 * heat_sensitivity if is_extreme_heat else 0.0
+                demand_factor += 0.06 * cold_sensitivity if is_extreme_cold else 0.0
+                amount_factor += 0.015 if is_moderate_rain else 0.0
+                amount_factor += 0.030 if is_bad_weather else 0.0
+                completion_delta -= 0.012 if is_bad_weather else 0.0
+                completion_delta -= 0.008 if is_storm_like else 0.0
+            elif category == "Grocery":
+                demand_factor += 0.015 * rain_sensitivity if is_light_rain else 0.0
+                demand_factor += 0.045 * rain_sensitivity if is_moderate_rain else 0.0
+                demand_factor += 0.090 * rain_sensitivity if is_heavy_rain else 0.0
+                demand_factor += 0.045 * heat_sensitivity if is_extreme_heat else 0.0
+                amount_factor += 0.020 if is_moderate_rain else 0.0
+                amount_factor += 0.070 if is_bad_weather else 0.0
+                completion_delta -= 0.006 if is_bad_weather else 0.0
+                completion_delta -= 0.006 if is_heavy_rain or is_high_wind else 0.0
+            elif category == "E-Commerce":
+                demand_factor += 0.018 * rain_sensitivity if is_moderate_rain or is_heavy_rain else 0.0
+                demand_factor += 0.030 * heat_sensitivity if is_extreme_heat else 0.0
+                demand_factor += 0.020 * cold_sensitivity if is_extreme_cold else 0.0
+                amount_factor += 0.010 if is_bad_weather else 0.0
+                completion_delta -= 0.005 if is_bad_weather else 0.0
+            else:
+                demand_factor += 0.004 if is_bad_weather else 0.0
+
+            demand[market_id, day_index, cat_pos] = demand_factor
+            amount[market_id, day_index, cat_pos] = amount_factor
+            completion[market_id, day_index, cat_pos] = completion_delta
+
+    return WeatherEffects(
+        enabled=True,
+        start_date=start,
+        demand_multiplier=demand,
+        amount_multiplier=amount,
+        completion_adjustment=completion,
+    )
+
+
+def weather_day_probabilities(
+    base_probabilities: np.ndarray,
+    dates: np.ndarray,
+    market_id: int,
+    category: str,
+    weather_effects: WeatherEffects,
+) -> np.ndarray:
+    if not weather_effects.enabled:
+        return base_probabilities
+    day_indices = (dates - weather_effects.start_date).astype("timedelta64[D]").astype(int)
+    multipliers = weather_effects.demand_multiplier[market_id, day_indices, CATEGORIES.index(category)]
+    return normalize(base_probabilities * multipliers)
+
+
+def weather_vector(
+    weather_effects: WeatherEffects,
+    market_ids: np.ndarray,
+    dates: np.ndarray,
+    categories: np.ndarray,
+    array: np.ndarray,
+    default: float,
+) -> np.ndarray:
+    if not weather_effects.enabled:
+        return np.full(len(categories), default, dtype=np.float64)
+    day_indices = (dates - weather_effects.start_date).astype("timedelta64[D]").astype(int)
+    cat_indices = category_index(categories)
+    return array[market_ids, day_indices, cat_indices]
+
+
 def hour_probabilities(category: str) -> np.ndarray:
     hours = np.arange(24)
     weights = np.ones(24, dtype=np.float64) * 0.25
@@ -363,6 +733,7 @@ def generate_amounts(
     categories: np.ndarray,
     hours: np.ndarray,
     month_number: int,
+    amount_multiplier: np.ndarray | None = None,
 ) -> np.ndarray:
     amounts = np.empty(len(categories), dtype=np.float64)
     for category in CATEGORIES:
@@ -393,6 +764,8 @@ def generate_amounts(
             base = 3 + rng.gamma(2.0, 9.5, size=size)
             base[large_transfer] = rng.lognormal(mean=4.15, sigma=0.90, size=int(large_transfer.sum()))
             amounts[mask] = np.clip(base, 2, 1000)
+    if amount_multiplier is not None:
+        amounts *= amount_multiplier
     return np.round(amounts, 2)
 
 
@@ -404,9 +777,12 @@ def generate_statuses(
     amounts: np.ndarray,
     hours: np.ndarray,
     config: dict,
+    completion_adjustment: np.ndarray | None = None,
 ) -> np.ndarray:
     complete = np.array([config["categories"][category]["complete_rate"] for category in categories], dtype=np.float64)
     complete += (ratings - 4.1) * 0.035
+    if completion_adjustment is not None:
+        complete += completion_adjustment
     complete -= np.where(np.char.find(platforms.astype(str), "Web Portal") >= 0, 0.018, 0.0)
     complete -= np.where((categories == "Ride Hailing") & np.isin(hours, [8, 18, 23]), 0.025, 0.0)
     complete -= np.where((categories == "E-Commerce") & (amounts > 220), 0.020, 0.0)
@@ -428,6 +804,153 @@ def generate_statuses(
     statuses[failed_or_refunded & refund] = "Refunded"
     statuses[failed_or_refunded & ~refund] = "Failed"
     return statuses
+
+
+def fraud_behavior_mask(
+    rng: np.random.Generator,
+    categories: np.ndarray,
+    user_segments: np.ndarray,
+    lifecycle: np.ndarray,
+    hours: np.ndarray,
+) -> np.ndarray:
+    propensity = np.full(len(categories), 0.0045, dtype=np.float64)
+    propensity += np.where(categories == "Digital Wallet", 0.0105, 0.0)
+    propensity += np.where(categories == "E-Commerce", 0.0070, 0.0)
+    propensity += np.where(categories == "Ride Hailing", 0.0010, 0.0)
+    propensity += np.where(categories == "Food Delivery", 0.0020, 0.0)
+    propensity += np.where(categories == "Grocery", 0.0015, 0.0)
+    propensity += np.where(user_segments == "New", 0.0090, 0.0)
+    propensity += np.where(lifecycle == "At Risk", 0.0040, 0.0)
+    propensity += np.where(np.isin(hours, [0, 1, 2, 3, 23]), 0.0030, 0.0)
+    return rng.random(len(categories)) < np.clip(propensity, 0.0, 0.026)
+
+
+def concentrate_fraud_users(
+    rng: np.random.Generator,
+    user_ids: np.ndarray,
+    market_ids: np.ndarray,
+    categories: np.ndarray,
+    mask: np.ndarray,
+) -> np.ndarray:
+    out = user_ids.copy()
+    for market_id in np.unique(market_ids[mask]):
+        market_mask = mask & (market_ids == market_id)
+        positions = np.flatnonzero(market_mask)
+        if len(positions) < 4:
+            continue
+        for category in ("Digital Wallet", "E-Commerce"):
+            category_positions = positions[categories[positions] == category]
+            if len(category_positions) < 4:
+                continue
+            n_anchors = max(1, len(category_positions) // 22)
+            anchors = rng.choice(category_positions, size=n_anchors, replace=False)
+            out[category_positions] = rng.choice(out[anchors], size=len(category_positions), replace=True)
+        for category, anchor_divisor in (
+            ("Ride Hailing", 24),
+            ("Food Delivery", 28),
+            ("Grocery", 34),
+        ):
+            category_positions = positions[categories[positions] == category]
+            if len(category_positions) < 6:
+                continue
+            n_anchors = max(1, len(category_positions) // anchor_divisor)
+            anchors = rng.choice(category_positions, size=n_anchors, replace=False)
+            out[category_positions] = rng.choice(out[anchors], size=len(category_positions), replace=True)
+    return out
+
+
+def cluster_fraud_timestamps(
+    rng: np.random.Generator,
+    timestamp_dt: np.ndarray,
+    user_ids: np.ndarray,
+    mask: np.ndarray,
+) -> np.ndarray:
+    out = timestamp_dt.copy()
+    suspicious_users, user_counts = np.unique(user_ids[mask], return_counts=True)
+    for user_id in suspicious_users[user_counts >= 3]:
+        positions = np.flatnonzero(mask & (user_ids == user_id))
+        if len(positions) < 3:
+            continue
+        base_position = int(rng.choice(positions))
+        base_hour = out[base_position].astype("datetime64[h]")
+        offsets = rng.integers(0, 1800, size=len(positions)).astype("timedelta64[s]")
+        out[positions] = (base_hour + offsets).astype("datetime64[us]")
+    return out
+
+
+def apply_fraud_behavior(
+    rng: np.random.Generator,
+    mask: np.ndarray,
+    categories: np.ndarray,
+    amounts: np.ndarray,
+    statuses: np.ndarray,
+    platforms: np.ndarray,
+    referrals: np.ndarray,
+    agents: dict,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    if not mask.any():
+        return amounts, statuses, platforms, referrals
+
+    adjusted_amounts = amounts.copy()
+    adjusted_statuses = statuses.copy()
+    adjusted_platforms = platforms.copy()
+    adjusted_referrals = referrals.copy()
+
+    amount_multiplier = np.ones(len(categories), dtype=np.float64)
+    amount_multiplier[mask & (categories == "Digital Wallet")] = rng.lognormal(
+        mean=1.44,
+        sigma=0.48,
+        size=int((mask & (categories == "Digital Wallet")).sum()),
+    )
+    amount_multiplier[mask & (categories == "E-Commerce")] = rng.lognormal(
+        mean=0.96,
+        sigma=0.40,
+        size=int((mask & (categories == "E-Commerce")).sum()),
+    )
+    amount_multiplier[mask & np.isin(categories, ["Food Delivery", "Grocery", "Ride Hailing"])] = rng.lognormal(
+        mean=0.16,
+        sigma=0.25,
+        size=int((mask & np.isin(categories, ["Food Delivery", "Grocery", "Ride Hailing"])).sum()),
+    )
+    amount_multiplier[mask & (categories == "Ride Hailing")] *= 0.94
+    amount_multiplier[mask & (categories == "Food Delivery")] *= 1.03
+    amount_multiplier[mask & (categories == "Grocery")] *= 1.06
+    adjusted_amounts = np.round(adjusted_amounts * amount_multiplier, 2)
+    adjusted_amounts[categories == "Digital Wallet"] = np.clip(adjusted_amounts[categories == "Digital Wallet"], 2, 1800)
+    adjusted_amounts[categories == "E-Commerce"] = np.clip(adjusted_amounts[categories == "E-Commerce"], 8, 1200)
+    adjusted_amounts[categories == "Grocery"] = np.clip(adjusted_amounts[categories == "Grocery"], 12, 360)
+    adjusted_amounts[categories == "Food Delivery"] = np.clip(adjusted_amounts[categories == "Food Delivery"], 5, 130)
+    adjusted_amounts[categories == "Ride Hailing"] = np.clip(adjusted_amounts[categories == "Ride Hailing"], 4, 240)
+
+    status_draw = rng.random(len(categories))
+    digital_mask = mask & (categories == "Digital Wallet")
+    ecommerce_mask = mask & (categories == "E-Commerce")
+    other_mask = mask & ~np.isin(categories, ["Digital Wallet", "E-Commerce"])
+    adjusted_statuses[digital_mask & (status_draw < 0.65)] = "Failed"
+    adjusted_statuses[digital_mask & (status_draw >= 0.65) & (status_draw < 0.85)] = "Refunded"
+    adjusted_statuses[ecommerce_mask & (status_draw < 0.35)] = "Failed"
+    adjusted_statuses[ecommerce_mask & (status_draw >= 0.35) & (status_draw < 0.80)] = "Refunded"
+    ride_mask = mask & (categories == "Ride Hailing")
+    food_mask = mask & (categories == "Food Delivery")
+    grocery_mask = mask & (categories == "Grocery")
+    adjusted_statuses[ride_mask & (status_draw < 0.33)] = "Failed"
+    adjusted_statuses[ride_mask & (status_draw >= 0.33) & (status_draw < 0.54)] = "Refunded"
+    adjusted_statuses[food_mask & (status_draw < 0.39)] = "Failed"
+    adjusted_statuses[food_mask & (status_draw >= 0.39) & (status_draw < 0.64)] = "Refunded"
+    adjusted_statuses[grocery_mask & (status_draw < 0.36)] = "Failed"
+    adjusted_statuses[grocery_mask & (status_draw >= 0.36) & (status_draw < 0.60)] = "Refunded"
+    adjusted_statuses[other_mask & (status_draw < 0.38)] = "Failed"
+    adjusted_statuses[other_mask & (status_draw >= 0.38) & (status_draw < 0.62)] = "Refunded"
+
+    platform_draw = rng.random(len(categories))
+    adjusted_platforms[mask & (platform_draw < 0.34)] = agents["web"]
+    adjusted_platforms[mask & (platform_draw >= 0.34) & (platform_draw < 0.54)] = agents["lite"]
+
+    referral_draw = rng.random(len(categories))
+    adjusted_referrals[mask & (referral_draw < 0.42)] = "Social Ad"
+    adjusted_referrals[mask & (referral_draw >= 0.42) & (referral_draw < 0.72)] = "Email Promo"
+    adjusted_referrals[mask & (referral_draw >= 0.72)] = "Push Notification"
+    return adjusted_amounts, adjusted_statuses, adjusted_platforms, adjusted_referrals
 
 
 def generate_referrals(
@@ -494,8 +1017,10 @@ def generate_interactions(
     lookup: dict,
     user_pools: dict,
     service_pools: dict,
+    weather_effects: WeatherEffects,
     rng: np.random.Generator,
     batch_size: int,
+    enable_fraud_behavior: bool,
 ) -> None:
     category_values = np.array(CATEGORIES, dtype=object)
     global_row_start = 0
@@ -506,7 +1031,9 @@ def generate_interactions(
         month_key = month.strftime("%Y-%m")
         rows_remaining = month_counts[month_key]
         part_number = 0
-        category_probs = category_probs_for_month(config, month_key)
+        month_market_weights = normalize(
+            lookup["market_weights"] * np.array([market_month_multiplier(month, int(market_id)) for market_id in markets], dtype=np.float64)
+        )
 
         while rows_remaining:
             size = min(batch_size, rows_remaining)
@@ -516,7 +1043,7 @@ def generate_interactions(
                 dtype=object,
             )
 
-            market_ids = weighted_choice(rng, markets, lookup["market_weights"], size)
+            market_ids = weighted_choice(rng, markets, month_market_weights, size)
             user_ids = np.empty(size, dtype=np.int64)
             for market_id in markets:
                 mask = market_ids == market_id
@@ -529,8 +1056,18 @@ def generate_interactions(
             acquisition = lookup["acquisition_sources"][user_index]
             user_segments = lookup["user_segments"][user_index]
             lifecycle = lookup["lifecycle_segments"][user_index]
+            membership = lookup["membership_tiers"][user_index]
 
-            categories = weighted_choice(rng, category_values, category_probs, size)
+            categories = np.empty(size, dtype=object)
+            for market_id in markets:
+                mask = market_ids == market_id
+                if mask.any():
+                    categories[mask] = weighted_choice(
+                        rng,
+                        category_values,
+                        market_category_probs(config, month_key, int(market_id)),
+                        int(mask.sum()),
+                    )
             service_ids = np.empty(size, dtype=np.int64)
             for market_id in markets:
                 market_mask = market_ids == market_id
@@ -548,14 +1085,19 @@ def generate_interactions(
 
             dates = np.empty(size, dtype="datetime64[D]")
             hours = np.empty(size, dtype=np.int16)
-            for category in CATEGORIES:
-                mask = categories == category
-                if not mask.any():
+            for market_id in markets:
+                market_mask = market_ids == market_id
+                if not market_mask.any():
                     continue
-                month_dates, _, day_probs = day_probabilities(month, category)
-                chosen_day_idx = rng.choice(np.arange(len(month_dates)), size=int(mask.sum()), replace=True, p=day_probs)
-                dates[mask] = month_dates[chosen_day_idx]
-                hours[mask] = rng.choice(np.arange(24), size=int(mask.sum()), replace=True, p=hour_probabilities(category))
+                for category in CATEGORIES:
+                    mask = market_mask & (categories == category)
+                    if not mask.any():
+                        continue
+                    month_dates, _, day_probs = day_probabilities(month, category)
+                    day_probs = weather_day_probabilities(day_probs, month_dates, int(market_id), category, weather_effects)
+                    chosen_day_idx = rng.choice(np.arange(len(month_dates)), size=int(mask.sum()), replace=True, p=day_probs)
+                    dates[mask] = month_dates[chosen_day_idx]
+                    hours[mask] = rng.choice(np.arange(24), size=int(mask.sum()), replace=True, p=hour_probabilities(category))
 
             seconds = (hours.astype(np.int64) * 3600) + rng.integers(0, 3600, size=size)
             timestamp_dt = (dates.astype("datetime64[s]") + seconds.astype("timedelta64[s]")).astype("datetime64[us]")
@@ -563,10 +1105,60 @@ def generate_interactions(
                 (month.month in (6, 7, 8)) & np.isin(categories, ["Food Delivery", "Ride Hailing"])
             )
 
+            fraud_mask = np.zeros(size, dtype=bool)
+            if enable_fraud_behavior:
+                fraud_mask = fraud_behavior_mask(rng, categories, user_segments, lifecycle, hours)
+                user_ids = concentrate_fraud_users(rng, user_ids, market_ids, categories, fraud_mask)
+                timestamp_dt = cluster_fraud_timestamps(rng, timestamp_dt, user_ids, fraud_mask)
+                user_index = user_ids - 1
+                primary_devices = lookup["primary_devices"][user_index]
+                acquisition = lookup["acquisition_sources"][user_index]
+                user_segments = lookup["user_segments"][user_index]
+                lifecycle = lookup["lifecycle_segments"][user_index]
+                membership = lookup["membership_tiers"][user_index]
+
+            amount_multiplier = weather_vector(
+                weather_effects,
+                market_ids,
+                dates,
+                categories,
+                weather_effects.amount_multiplier,
+                1.0,
+            )
+            category_market_amount_multiplier = np.ones(size, dtype=np.float64)
+            for market_id in markets:
+                market_mask = market_ids == market_id
+                if not market_mask.any():
+                    continue
+                for category in CATEGORIES:
+                    mask = market_mask & (categories == category)
+                    if mask.any():
+                        category_market_amount_multiplier[mask] = 0.86 + 0.14 * MARKET_CATEGORY_AFFINITY[int(market_id)][category]
+            amount_multiplier *= MARKET_AMOUNT_MULTIPLIER[market_ids] * category_market_amount_multiplier * user_amount_multiplier(membership, lifecycle)
+            completion_adjustment = weather_vector(
+                weather_effects,
+                market_ids,
+                dates,
+                categories,
+                weather_effects.completion_adjustment,
+                0.0,
+            )
+            completion_adjustment += MARKET_COMPLETION_ADJUSTMENT[market_ids] + user_completion_adjustment(membership, lifecycle)
             platforms = generate_platforms(rng, primary_devices, agents)
-            amounts = generate_amounts(rng, categories, hours, month.month)
-            statuses = generate_statuses(rng, categories, platforms, service_ratings, amounts, hours, config)
+            amounts = generate_amounts(rng, categories, hours, month.month, amount_multiplier)
+            statuses = generate_statuses(rng, categories, platforms, service_ratings, amounts, hours, config, completion_adjustment)
             referrals = generate_referrals(rng, acquisition, lifecycle, is_promo)
+            if enable_fraud_behavior:
+                amounts, statuses, platforms, referrals = apply_fraud_behavior(
+                    rng,
+                    fraud_mask,
+                    categories,
+                    amounts,
+                    statuses,
+                    platforms,
+                    referrals,
+                    agents,
+                )
 
             market_index = market_ids - 1
             gps_lat = np.round(lookup["market_lats"][market_index] + rng.normal(0.0, 0.11, size=size), 5)
@@ -605,6 +1197,17 @@ def generate_interactions(
             print(f"generated {month_key} part {part_number}: {size:,} rows")
 
 
+def write_non_partitioned_interactions(output_dir: Path) -> None:
+    interaction_files = sorted((output_dir / "nova_interactions").glob("month=*/part-*.parquet"))
+    if not interaction_files:
+        raise SystemExit(f"No partitioned interaction parquet files found under {output_dir / 'nova_interactions'}")
+    pl.scan_parquet([str(path) for path in interaction_files], hive_partitioning=False).sink_parquet(
+        output_dir / "nova_interactions.parquet",
+        compression="zstd",
+        maintain_order=True,
+    )
+
+
 def main() -> None:
     args = parse_args()
     config_path = Path(args.config)
@@ -640,13 +1243,29 @@ def main() -> None:
     lookup = build_lookup_arrays(users, services, markets)
     user_pools = precompute_user_pools(lookup, months)
     service_pools = precompute_service_pools(lookup)
-    generate_interactions(paths.output_dir, config, months, month_counts, lookup, user_pools, service_pools, rng, batch_size)
+    weather_effects = load_weather_effects(config, args.enable_weather_effects)
+    generate_interactions(
+        paths.output_dir,
+        config,
+        months,
+        month_counts,
+        lookup,
+        user_pools,
+        service_pools,
+        weather_effects,
+        rng,
+        batch_size,
+        args.enable_fraud_behavior,
+    )
+    write_non_partitioned_interactions(paths.output_dir)
 
     metadata = {
         "generated_at": datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "seed": int(config["seed"]),
         "target_rows": target_rows,
         "batch_size": batch_size,
+        "enable_weather_effects": bool(args.enable_weather_effects),
+        "enable_fraud_behavior": bool(args.enable_fraud_behavior),
         "month_counts": month_counts,
         "source_raw_dir": str(paths.raw_dir),
         "output_dir": str(paths.output_dir),
