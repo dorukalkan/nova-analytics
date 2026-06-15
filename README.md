@@ -22,3 +22,22 @@ For a quick smoke test without creating 50M rows:
   --no-strict
 ```
 Final BigQuery ingestion should use `data/corrected/`, not `data/raw/`.
+
+The generator now writes both the partitioned interaction dataset under
+`data/corrected/nova_interactions/` and the non-partitioned ingestion file
+`data/corrected/nova_interactions.parquet`.
+
+Regeneration phases can be enabled explicitly:
+
+```bash
+# Phase 2: realism + weather-sensitive behavior
+.venv/bin/python scripts/generate_corrected_dataset.py \
+  --enable-weather-effects \
+  --overwrite
+
+# Phase 3: realism + weather-sensitive behavior + unlabeled fraud-like behavior
+.venv/bin/python scripts/generate_corrected_dataset.py \
+  --enable-weather-effects \
+  --enable-fraud-behavior \
+  --overwrite
+```
