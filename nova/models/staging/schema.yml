@@ -1,6 +1,137 @@
 version: 2
 
 models:
+  - name: stg_interactions
+    description: "Staging model for corrected Nova interactions ingested into BigQuery."
+    columns:
+      - name: transaction_id
+        tests:
+          - unique
+          - not_null
+      - name: user_id
+        tests:
+          - not_null
+      - name: service_id
+        tests:
+          - not_null
+      - name: category
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - Food Delivery
+                  - Ride Hailing
+                  - E-Commerce
+                  - Grocery
+                  - Digital Wallet
+      - name: amount
+        tests:
+          - not_null
+      - name: status
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - Completed
+                  - Failed
+                  - Refunded
+      - name: timestamp
+        tests:
+          - not_null
+      - name: order_date
+        tests:
+          - not_null
+      - name: market_id
+        tests:
+          - not_null
+      - name: is_promo_period
+        tests:
+          - not_null
+
+  - name: stg_users
+    description: "Staging model for corrected Nova users ingested into BigQuery."
+    columns:
+      - name: user_id
+        tests:
+          - unique
+          - not_null
+      - name: join_date
+        tests:
+          - not_null
+      - name: market_id
+        tests:
+          - not_null
+      - name: user_segment
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - Dormant
+                  - Casual
+                  - Regular
+                  - Power
+                  - New
+      - name: lifecycle_segment
+        tests:
+          - not_null
+
+  - name: stg_services
+    description: "Staging model for corrected Nova services ingested into BigQuery."
+    columns:
+      - name: service_id
+        tests:
+          - unique
+          - not_null
+      - name: category
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - Food Delivery
+                  - Ride Hailing
+                  - E-Commerce
+                  - Grocery
+                  - Digital Wallet
+      - name: rating
+        tests:
+          - not_null
+      - name: market_id
+        tests:
+          - not_null
+      - name: service_tier
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - Head
+                  - Mid
+                  - Long Tail
+      - name: popularity_score
+        tests:
+          - not_null
+
+  - name: stg_markets
+    description: "Staging model for corrected Nova markets ingested into BigQuery."
+    columns:
+      - name: market_id
+        tests:
+          - unique
+          - not_null
+      - name: market_name
+        tests:
+          - not_null
+      - name: latitude
+        tests:
+          - not_null
+      - name: longitude
+        tests:
+          - not_null
+
   - name: stg_geo_market_country_lookup
     description: "Staging model for the reviewed Nova market-to-country lookup seed."
     columns:
