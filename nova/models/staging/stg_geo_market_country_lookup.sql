@@ -1,6 +1,6 @@
 {{ config(schema=target.schema) }}
 
-with source as (
+with raw_seed as (
     select *
     from {{ ref('market_country_lookup') }}
 ),
@@ -13,9 +13,9 @@ cleaned as (
         country_iso2,
         country_iso3,
         world_bank_country_code,
-        source as seed_source,
+        raw_seed.source as seed_source,
         fetched_at_utc as seed_fetched_at
-    from source
+    from raw_seed
 )
 
 select * from cleaned

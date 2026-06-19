@@ -7,6 +7,7 @@ paths:
   corrected_dir: data/corrected
   qa_dir: data/corrected/qa
   validation_report: docs/reports/corrected_data_validation.md
+  weather_seed: nova/seeds/ext_weather_daily.csv
 
 dates:
   start: "2024-01-01"
@@ -101,3 +102,26 @@ validation:
   top_1pct_service_share_min: 0.15
   top_1pct_service_share_max: 0.30
   max_market_jitter_degrees: 0.85
+  min_ride_hailing_bad_weather_lift: 0.02
+  min_food_delivery_bad_weather_lift: 0.015
+  min_grocery_bad_weather_gmv_lift: 0.015
+  min_grocery_bad_weather_avg_amount_lift: 0.01
+  max_ride_hailing_bad_weather_completion_delta: -0.002
+  max_food_delivery_bad_weather_completion_delta: -0.002
+  min_user_hour_burst_share: 0.001
+  max_user_hour_burst_share: 0.05
+  min_high_velocity_non_complete_lift: 0.04
+  min_high_amount_non_complete_lift: 0.03
+  min_proxy_suspicious_share: 0.003
+  max_proxy_suspicious_share: 0.04
+  min_new_at_risk_high_amount_non_complete_lift: 0.03
+  min_proxy_web_lite_lift: 0.06
+  min_proxy_promo_referral_lift: 0.05
+  min_digital_wallet_proxy_share_lift: 0.003
+  min_ecommerce_proxy_share_lift: 0.002
+  min_customer_activity_spread: 0.10
+  min_customer_non_completion_spread: 0.005
+  min_mean_category_share_std: 0.01
+  min_mean_market_amount_std_usd: 2.0
+  min_mean_market_completion_std: 0.005
+  max_median_market_monthly_corr: 0.995

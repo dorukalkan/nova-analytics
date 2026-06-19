@@ -52,6 +52,7 @@ nav = [
   { "Notes" = [
     "notes/git_workflow.md",
     "notes/geo_market_opportunity_plan.md",
+    "notes/regeneration_plan.md",
   ] },
   { "Reports" = [
     "reports/corrected_data_validation.md",
@@ -66,6 +67,7 @@ nav = [
   ] },
   { "About" = [
     "about/dataset.md",
+    "about/api_sources.md",
     "about/team.md",
   ] },
 ]
