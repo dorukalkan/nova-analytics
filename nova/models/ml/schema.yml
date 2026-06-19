@@ -1,0 +1,35 @@
+version: 2
+
+models:
+  - name: ml_transaction_fraud_features
+    description: "Transaction-grain feature table for unsupervised fraud detection and anomaly scoring. This model intentionally does not include a fraud label."
+    columns:
+      - name: transaction_uuid
+        description: "Unique transaction identifier."
+        tests:
+          - unique
+          - not_null
+      - name: user_id
+        description: "User identifier associated with the transaction."
+        tests:
+          - not_null
+      - name: service_id
+        description: "Service identifier associated with the transaction."
+        tests:
+          - not_null
+      - name: timestamp
+        description: "Transaction timestamp."
+        tests:
+          - not_null
+      - name: amount_usd
+        description: "Transaction amount in USD."
+        tests:
+          - not_null
+
+sources:
+  - name: ml_outputs
+    database: nova-project-498911
+    schema: dbt_yasemen
+    tables:
+      - name: ml_transaction_fraud_scores_sample
+        description: "IsolationForest fraud anomaly scores written from the local notebook for Tableau reporting."
