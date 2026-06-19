@@ -1,6 +1,6 @@
 {{ config(schema=target.schema) }}
 
-with source as (
+with raw_seed as (
     select *
     from {{ ref('ext_weather_daily') }}
 ),
@@ -20,9 +20,9 @@ cleaned as (
         precipitation_hours,
         wind_speed_10m_max_kmh,
         is_rain_day,
-        source as seed_source,
+        raw_seed.source as seed_source,
         fetched_at_utc as seed_fetched_at
-    from source
+    from raw_seed
 )
 
 select * from cleaned
