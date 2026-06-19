@@ -109,3 +109,20 @@ models:
         description: "Business-friendly segment based on rainy vs non-rainy transaction lift."
         tests:
           - not_null
+
+  - name: mart_transaction_fraud_tableau
+    description: "Tableau-ready transaction fraud anomaly table enriched with transaction, market, user behavior, and anomaly score fields."
+    columns:
+      - name: transaction_uuid
+        description: "Unique transaction identifier."
+        tests:
+          - unique
+          - not_null
+      - name: fraud_anomaly_score
+        description: "IsolationForest anomaly score. Higher values indicate more suspicious transactions."
+        tests:
+          - not_null
+      - name: is_suspicious_transaction
+        description: "Boolean flag indicating whether the model marked the transaction as anomalous."
+        tests:
+          - not_null
