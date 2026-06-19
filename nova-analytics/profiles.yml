@@ -1,0 +1,84 @@
+user:
+  outputs:
+    default:
+      dataproc_region: EU
+      keyfile_json:
+        auth_provider_x509_cert_url: https://www.googleapis.com/oauth2/v1/certs
+        auth_uri: https://accounts.google.com/o/oauth2/auth
+        client_email: dbt-merve@nova-project-498911.iam.gserviceaccount.com
+        client_id: '114009353572940244532'
+        client_x509_cert_url: https://www.googleapis.com/robot/v1/metadata/x509/dbt-merve%40nova-project-498911.iam.gserviceaccount.com
+        private_key: '-----BEGIN PRIVATE KEY-----
+
+          MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC6yfLv90b75ZR9
+
+          MqNsLfy4k5drg7DpGgDmCgWlKDt5ieL/1QISY2G2/yyfsCyoOWa1HUFhvxdaSDf3
+
+          rZwuFq33Ng61xfPrwsXXr6uVnOkMBZV6nT1z3obaS5paPulS6JV0nnPjMO2Rzo9x
+
+          Go7g6wYzFMTT8X6rg418hA5bjzwPa9yIbfnUcnJgey3Fi1QgyPEbgp9qPTiirHYy
+
+          Xmxe+bc0rVWTmqU8mWno0LXRMU7ykSNRQbObIVQbz6O0L+ab3XPm9ni8JDB0PvW/
+
+          +Qi6AB1LAtJgfFKm+fSDn+1H3+VV1xcIA0vy9PMgRiaeMG6ryf2ac27GL5I0jO+c
+
+          cXo6oPrLAgMBAAECggEAFdJvG+LXO6mMKf5HAmXy/vtbNtfZTLpZfYaRN0TWgfH+
+
+          f6X6inxq147DP1q9NOAT5DfpQgqpp0YFp910ABxtMZLysADS6OnF5FdlI+MDhQCI
+
+          AJ2rJsTKG2m2vDFaX/HFOC0k29eFAcJQlsWkCJncjQ4xmpM9mbsSRghFhyPaP/DF
+
+          /JFvBBd4QaBAA2zr9bTJysxByUZ6UjxB1XdcNFTDo0st//1Emtn9dPgwopsGXjFD
+
+          cUJSowzkEISjoe5z4s5LxOr1WXhW9K/93bShVDZWJPjLaysKiaMq5My25ITcq1KX
+
+          qyDjnUqEpuI2xhJzjmTTNPeFg7pasJh57iXpiybUXQKBgQD4lj8JYYQZuon6nnTF
+
+          YTTVkNZgbH847IYeARr1Cqj+JbQ4OuYPpvbv7fcoJY/Nh1pT2hK2W0PNeTxSL2Ww
+
+          YU38A2pLZIRgCs4aIsOEtLhhn0SW1U/VBorxPpcgLmwQ+tNOG6k9WvV/VEGNkDBA
+
+          FO4ST7DbWi4MpuvWsvPGowU3DwKBgQDAW+0eThom7RwX1HQ/hLCpY7f6qhPO57Lj
+
+          j7q9+PQXKUJ2bhyqk/4/PBx88Va+jHHaboPNX7Y8NdpH0exOOhYT5HWdp636AUHU
+
+          L05kAuJPlHDEEAgbGkQp+Pb08mhnqrMr/FUETmbNxon77liqRd18ujGEFVQTuSgt
+
+          K3+NAV6ghQKBgQCrFy2XlUhINP0WQsz3tGmau67wenwtf4znRbd6A7ZABU8+jDsf
+
+          drjqdYvwU7nfqVLf9219mN7XoqODpR+F/9KeqvMTpMD/ITCtCFQtF/z3I5kffv0N
+
+          Dw298GgvPAQgw6F/VsZqdhoVYrYjaqPq1vzsGXEN58ld59zVziC+DCFgvQKBgEmo
+
+          6fwY3FrboU5exMUuApha3zDVwBATGaWafGAS3SWhXxoKwF9xnIKKej4+DIGbNl32
+
+          w/H5HMeht5yY/mxWQe4MJh3g//YkVRjzpIkXsaHXrfbmTLRUMpYACFF0IhbQfxvw
+
+          3H1xqFxUErKuarWJW29PvXZe1HtZA9GIPqe4RowhAoGAbXqHp0z0hzRSmmOTnW16
+
+          7YyE15EFNb3S6BJnyeDSYR0fgp5VmkljFhz9DN8a0rqqcLHpfYq4hjM/lVnQJKs8
+
+          MkrzXnSrdqweuM1soe6HFCIEYg7V27rF51wE054AB5BEMcZlJQaydaKkjlenvk+z
+
+          AuwMXCR/Ua2ADlg8yVHQboQ=
+
+          -----END PRIVATE KEY-----
+
+          '
+        private_key_id: afeec38e8584b92ee2df35b7a3a060edf17f5ff2
+        project_id: nova-project-498911
+        token_uri: https://oauth2.googleapis.com/token
+        type: service_account
+      location: EU
+      method: service-account-json
+      project: nova-project-498911
+      schema: dbt_mmervekaymaz
+      scopes:
+      - https://www.googleapis.com/auth/bigquery
+      - https://www.googleapis.com/auth/cloud-platform
+      - https://www.googleapis.com/auth/drive
+      - https://www.googleapis.com/auth/userinfo.email
+      target_name: default
+      threads: 4
+      type: bigquery
+  target: default
