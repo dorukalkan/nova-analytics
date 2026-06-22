@@ -56,6 +56,7 @@ nav = [
   ] },
   { "Reports" = [
     "reports/corrected_data_validation.md",
+    "reports/presentation_interpretation_guide.md",
     "reports/synthetic_data_audit.md",
     "reports/synthetic_data_audit_tr.md",
   ] },

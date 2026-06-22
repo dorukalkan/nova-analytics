@@ -110,6 +110,120 @@ models:
         tests:
           - not_null
 
+  - name: mart_geo_weather_category_effects
+    description: "Dashboard-ready category demand lift summary for broader bad-weather conditions, with all-market and market-level rows."
+    columns:
+      - name: weather_effect_id
+        description: "Unique identifier for the weather effect scope, market, and category."
+        tests:
+          - unique
+          - not_null
+      - name: weather_effect_scope
+        description: "Whether the row summarizes all markets or one market."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['All Markets', 'Market']
+      - name: category
+        description: "Nova service category."
+        tests:
+          - not_null
+      - name: observed_days
+        description: "Number of market-category-day observations included in the comparison."
+        tests:
+          - not_null
+      - name: bad_weather_days
+        description: "Number of observed days flagged as bad weather."
+        tests:
+          - not_null
+      - name: normal_weather_days
+        description: "Number of observed days not flagged as bad weather."
+        tests:
+          - not_null
+      - name: bad_weather_sensitivity_segment
+        description: "Business-friendly segment based on bad-weather vs normal-weather transaction lift."
+        tests:
+          - not_null
+
+  - name: mart_geo_category_hourly_demand
+    description: "Dashboard-ready hourly demand by market and category for category-by-hour line charts."
+    columns:
+      - name: market_category_hour_id
+        description: "Unique identifier for market, category, and hour of day."
+        tests:
+          - unique
+          - not_null
+      - name: market_id
+        description: "Nova market identifier."
+        tests:
+          - not_null
+      - name: category
+        description: "Nova service category."
+        tests:
+          - not_null
+      - name: hour_of_day
+        description: "Hour of day from 0 to 23."
+        tests:
+          - not_null
+      - name: transactions
+        description: "Transactions observed in this market, category, and hour."
+        tests:
+          - not_null
+
+  - name: mart_geo_market_cluster_features
+    description: "Market-level feature table for strategic market clustering in the geography dashboard."
+    columns:
+      - name: market_id
+        description: "Nova market identifier. One row per market."
+        tests:
+          - unique
+          - not_null
+      - name: market_name
+        description: "Human-readable Nova market name."
+        tests:
+          - not_null
+      - name: nova_region
+        description: "Nova operating region."
+        tests:
+          - not_null
+      - name: total_transactions
+        description: "Total 2024 transactions in the market."
+        tests:
+          - not_null
+      - name: total_gmv_usd
+        description: "Total 2024 GMV in USD in the market."
+        tests:
+          - not_null
+      - name: avg_daily_transactions
+        description: "Average daily market transactions in 2024."
+        tests:
+          - not_null
+      - name: transaction_growth_rate
+        description: "December average daily transactions compared with January average daily transactions."
+        tests:
+          - not_null
+      - name: active_services
+        description: "Total active services available in the market across categories."
+        tests:
+          - not_null
+      - name: completion_rate
+        description: "Market transaction completion rate."
+        tests:
+          - not_null
+      - name: opportunity_score
+        description: "Composite market opportunity score from the opportunity mart."
+        tests:
+          - not_null
+      - name: opportunity_segment
+        description: "Opportunity segment from the opportunity mart."
+        tests:
+          - not_null
+      - name: rain_day_share
+        description: "Share of market-category-day rows observed on rain days."
+        tests:
+          - not_null
+
   - name: mart_transaction_fraud_tableau
     description: "Tableau-ready transaction fraud anomaly table enriched with transaction, market, user behavior, and anomaly score fields."
     columns:

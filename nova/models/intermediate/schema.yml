@@ -118,6 +118,29 @@ models:
         tests:
           - not_null
 
+  - name: int_geo_market_category_hour_metrics
+    description: "Nova transaction metrics aggregated to market, category, and hour of day."
+    columns:
+      - name: market_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_markets')
+                field: market_id
+      - name: category
+        tests:
+          - not_null
+      - name: hour_of_day
+        tests:
+          - not_null
+      - name: transactions
+        tests:
+          - not_null
+      - name: gmv_usd
+        tests:
+          - not_null
+
   - name: int_geo_service_supply_by_market_category
     description: "Service supply and service-tier mix by market and category."
     columns:
