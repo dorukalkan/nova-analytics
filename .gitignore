@@ -26,6 +26,7 @@ data/
 # Logs
 logs/
 *.log
+**/logs/
 
 # Cache files
 .cache/
@@ -33,9 +34,19 @@ logs/
 # Zensical build output
 site/
 
+# dbt
+profiles.yml
+**/profiles.yml
+target/
+**/target/
+dbt_packages/
+**/dbt_packages/
+dbt_internal_packages/
+**/dbt_internal_packages/
+.user.yml
+
 # Google Cloud local credentials
 .gcloud/
 credentials.json
 application_default_credentials.json
 *service-account*.json
-dbt_internal_packages/
