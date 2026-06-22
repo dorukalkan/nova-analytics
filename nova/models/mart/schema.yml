@@ -126,3 +126,56 @@ models:
         description: "Boolean flag indicating whether the model marked the transaction as anomalous."
         tests:
           - not_null
+
+  - name: mart_customer_overview
+    description: "Customer-level overview table combining user attributes with transaction history and revenue metrics."
+    columns:
+      - name: user_id
+        description: "Unique user identifier."
+        tests:
+          - unique
+          - not_null
+      - name: membership_tier
+        description: "Customer membership tier."
+        tests:
+          - not_null
+      - name: transaction_count
+        description: "Total number of distinct transactions for the customer."
+        tests:
+          - not_null
+      - name: completed_transaction_count
+        description: "Total number of completed transactions for the customer."
+        tests:
+          - not_null
+      - name: total_revenue
+        description: "Completed transaction revenue for the customer."
+        tests:
+          - not_null
+
+  - name: mart_customer_segments
+    description: "Customer segmentation mart based on RFM scores."
+    columns:
+      - name: user_id
+        description: "Unique user identifier."
+        tests:
+          - unique
+          - not_null
+      - name: recency_score
+        description: "Recency score used for RFM segmentation."
+        tests:
+          - not_null
+      - name: frequency_score
+        description: "Frequency score used for RFM segmentation."
+        tests:
+          - not_null
+      - name: monetary_score
+        description: "Monetary score used for RFM segmentation."
+        tests:
+          - not_null
+      - name: customer_segment
+        description: "Business-friendly customer segment label."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Champions', 'Loyal Customers', 'New Customers', 'Big Spenders', 'At Risk', 'Lost Customers', 'Potential Loyalists']
