@@ -1,7 +1,8 @@
 ---
-icon: lucide/rocket
+icon: lucide/house
 title: Overview
 description: Landing page
+author: Doruk Alkan
 ---
 
 # Get started

@@ -49,16 +49,14 @@ repo_name = "nova-analytics"
 # Read more: https://zensical.org/docs/setup/navigation/
 nav = [
   "index.md",
-  { "Notes" = [
-    "notes/git_workflow.md",
-    "notes/geo_market_opportunity_plan.md",
-    "notes/regeneration_plan.md",
-  ] },
-  { "Reports" = [
-    "reports/corrected_data_validation.md",
-    "reports/presentation_interpretation_guide.md",
-    "reports/synthetic_data_audit.md",
-    "reports/synthetic_data_audit_tr.md",
+  { "Analyses" = [
+    "analyses/executive_summary.md",
+    "analyses/marketplace_analysis.md",
+    "analyses/demand_drivers.md",
+    "analyses/category_performance.md",
+    "analyses/customer_risk.md",
+    "analyses/customer_analysis.md",
+    "analyses/rfm_analysis.md",
   ] },
   { "dbt Models" = [
     "models/seeds.md",
@@ -289,8 +287,8 @@ features = [
 # - https://zensical.org/docs/setup/logo-and-icons
 # - https://github.com/zensical/ui/tree/master/dist/.icons
 # ----------------------------------------------------------------------------
-#[project.theme.icon]
-#logo = "lucide/smile"
+# [project.theme.icon]
+logo = "assets/nova_logo.png"
 
 # ----------------------------------------------------------------------------
 # In the "font" subsection you can configure the fonts used. By default, fonts
