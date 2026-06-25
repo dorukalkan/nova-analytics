@@ -8,11 +8,13 @@ description: Project contributors and ownership areas
 
 ## Doruk Alkan
 
-Focused on ...
+Focused on markets and growth opportunities, enriched data via APIs, modeled demand, profiled markets with clustering, visualized findings in Tableau, and prepared this project site.
 
-Project writeup:
+Project writeups:
 
-- link to page
+- [Executive Summary](../analyses/executive_summary.md)
+- [Marketplace Analysis & Growth Opportunities](../analyses/marketplace_analysis.md)
+- [Local Demand Drivers](../analyses/demand_drivers.md)
 
 ```text title="Email"
 dorukalkan42@gmail.com
@@ -24,11 +26,12 @@ dorukalkan42@gmail.com
 
 ## Yasemen Salım Dündar
 
-Focused on ...
+Focused on analyzing category and service performance, repeat customer and risk behavior, investigated fraud with anomaly detection models, and visualized findings in Tableau. 
 
 Project writeups:
 
-- link to page
+- [Category Performance](../analyses/category_performance.md)
+- [Customer Repeat & Risk](../analyses/customer_risk.md)
 
 ```text title="Email"
 yasemennursalim@gmail.com
@@ -40,11 +43,12 @@ yasemennursalim@gmail.com
 
 ## Merve Kaymaz
 
-Focused on ...
+Focused on analyzing customer lifecycle and value, acquisition, and segmentation, implemented RFM (recency, frequency, monetary) analysis, and visualized findings in Tableau.
 
 Project writeups:
 
-- link to page
+- [Customer Analysis](../analyses/customer_analysis.md)
+- [RFM Analysis](../analyses/rfm_analysis.md)
 
 ```text title="Email"
 email
