@@ -1,8 +1,26 @@
 ---
 icon: lucide/users
+title: Team
+description: Project contributors and ownership areas
 ---
 
 # Team
+
+## Doruk Alkan
+
+Focused on ...
+
+Project writeup:
+
+- link to page
+
+```text title="Email"
+dorukalkan42@gmail.com
+```
+
+[LinkedIn :fontawesome-brands-linkedin:](https://www.linkedin.com/in/dorukalkan/){ .md-button }
+[GitHub :fontawesome-brands-github:](https://github.com/dorukalkan){ .md-button }
+
 
 ## Yasemen Salım Dündar
 
@@ -34,19 +52,3 @@ email
 
 linkedin
 github
-
-
-## Doruk Alkan
-
-Focused on ...
-
-Project writeup:
-
-- link to page
-
-```text title="Email"
-dorukalkan42@gmail.com
-```
-
-[LinkedIn :fontawesome-brands-linkedin:](https://www.linkedin.com/in/dorukalkan/){ .md-button }
-[GitHub :fontawesome-brands-github:](https://github.com/dorukalkan){ .md-button }
