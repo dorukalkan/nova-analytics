@@ -1,7 +1,7 @@
 ---
-icon: lucide/
-title: Executive Summary
-description: 
+icon: lucide/map
+title: Marketplace Analysis
+description: Market opportunity, regional performance, and growth prioritization dashboard
 author: Doruk Alkan
 ---
 
