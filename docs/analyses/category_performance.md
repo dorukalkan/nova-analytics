@@ -7,59 +7,65 @@ author: Yasemen Nur Salım Dündar
 
 # Category Performance Intelligence
 
-![Tableau Category Performance Dashboard](../assets/4_category.png)
+=== "Insights"
 
-The Category Performance Intelligence dashboard compares Nova's service categories across revenue contribution, service quality, operational risk, repeat behavior, and growth potential.
+    ![Tableau Category Performance Dashboard](../assets/4_category.png)
 
-!!! abstract "What this dashboard answers"
+    Category Performance Intelligence compares Nova's service categories across revenue contribution, service quality, operational risk, repeat behavior, and growth potential.
 
-    - Which categories contribute the most revenue?
-    - Which categories carry the highest operational risk?
-    - Which services need intervention?
-    - Where should growth investment be prioritized?
+    !!! abstract "What this page answers"
 
-## KPI Cards
+        - Which categories contribute the most revenue?
+        - Which categories carry the highest operational risk?
+        - Which services need intervention?
+        - Where should growth investment be prioritized?
 
-| KPI | What it shows | Why it matters |
-| --- | --- | --- |
-| Critical Services | Number of services classified as operationally critical | Highlights where immediate service-level attention is needed |
-| Average Rating | Average customer rating across services | Tracks category-level service quality |
-| Repeat User Rate | Share of users who interact with the same service multiple times | Shows whether a category is building durable customer behavior |
+    ## KPI Cards
 
-## Dashboard Views
+    | KPI | What it shows | Why it matters |
+    | --- | --- | --- |
+    | Critical Services | Number of services classified as operationally critical | Highlights where immediate service-level attention is needed |
+    | Average Rating | Average customer rating across services | Tracks category-level service quality |
+    | Repeat User Rate | Share of users who interact with the same service multiple times | Shows whether a category is building durable customer behavior |
 
-### Revenue-Risk Matrix
+    ## Dashboard Views
 
-This bubble chart positions categories by revenue share and revenue loss rate, with bubble size representing total revenue.
+    | View | What it shows | Business use |
+    | --- | --- | --- |
+    | Revenue-Risk Matrix | Category revenue share, revenue loss rate, and total revenue | Finds large categories with meaningful risk exposure |
+    | Service Performance Scorecard | Service-level revenue, success, refund, failure, and risk segment | Identifies services needing operational attention |
+    | Service Risk Distribution | Risk segment counts by category | Distinguishes isolated service issues from broad category risk |
+    | Growth Opportunity Ranking | Category scale and execution quality | Prioritizes categories for expansion or stabilization |
 
-!!! tip "How to read it"
+    !!! success "So what?"
 
-    Categories in the high-revenue, high-risk area are the most important to monitor. They are large enough to affect overall performance and risky enough to create revenue leakage.
+        Categories with strong revenue and high success rates are better candidates for growth. Categories with high revenue but weaker reliability should be stabilized before additional investment.
 
-### Service Performance Scorecard
+=== "Method"
 
-The scorecard lists service-level performance metrics such as risk segment, revenue, success rate, refund rate, and failure rate.
+    This analysis is built with dbt service-health and category-health models. It does not use predictive modeling.
 
-| Business question | Dashboard signal |
-| --- | --- |
-| Which services are underperforming? | Low success rate, high refund rate, or high failure rate |
-| Which services need operational improvement? | Critical or high-risk service labels |
-| Which categories have concentrated risk? | Multiple risky services in the same category |
+    ## dbt Model Flow
 
-### Service Risk Distribution
+    | Layer | Models | Purpose |
+    | --- | --- | --- |
+    | Staging | `stg_interactions`, `stg_services`, `stg_markets` | Standardize corrected transaction, service, and market data |
+    | Intermediate | `int_services_enriched`, `int_service_interactions`, `int_service_health`, `int_service_risk`, `int_category_health` | Join services to interactions, aggregate service performance, classify service risk, and roll up category health |
+    | Mart | `mart_category_performance`, `mart_category_market_performance`, `mart_marketplace_service` | Provide Tableau-ready category, market-category, and service-level reporting tables |
 
-This view shows how services are distributed across risk levels within each category.
+    ## Risk Logic
 
-Use it to distinguish a category with a few isolated service issues from a category where risk is broad-based.
+    Service risk is assigned from operational signals:
 
-### Growth Opportunity Ranking
+    | Signal | Role |
+    | --- | --- |
+    | Success rate | Measures completed interaction reliability |
+    | Failure rate | Flags services with elevated failure behavior |
+    | Refund rate | Captures revenue and quality leakage |
+    | Rating | Adds customer-facing service quality context |
 
-The ranking combines revenue volume and success rate to identify categories with both scale and execution quality.
+    The category dashboard then rolls these service-level signals into category-level risk and growth views.
 
-!!! success "Business use"
+    !!! tip "Why this matters"
 
-    Categories with strong revenue and high success rates are better candidates for expansion. Categories with high revenue but weaker reliability should be stabilized before additional growth investment.
-
-## Business Impact
-
-This dashboard helps stakeholders monitor category health, reduce revenue concentration risk, prioritize service interventions, and identify scalable growth opportunities across the Nova marketplace.
+        The dashboard is not just visualizing raw category totals. It is built from a service-level health model, which lets category performance reflect both scale and operational quality.
