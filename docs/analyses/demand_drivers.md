@@ -7,9 +7,9 @@ author: Doruk Alkan
 
 # Local Demand Drivers
 
-=== "Insights"
+![Tableau Demand Drivers Dashboard](../assets/3_demand.png)
 
-    ![Tableau Demand Drivers Dashboard](../assets/3_demand.png)
+=== "Insights"
 
     The initial question was whether local conditions, especially weather, help explain Nova demand. The answer is yes, but weather is not the main story. Bad weather is associated with higher demand in some categories, but the demand model points more strongly to **service supply** as the largest predictor family.
 

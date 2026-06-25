@@ -7,9 +7,9 @@ author: Doruk Alkan
 
 # Executive Summary
 
-=== "Insights"
+![Tableau Executive Summary Dashboard](../assets/1_exec_summary.png)
 
-    ![Tableau Executive Summary Dashboard](../assets/1_exec_summary.png)
+=== "Insights"
 
     Nova processed **$2.66B in GMV** across **50M interactions** in the regenerated 2024 dataset. GMV, or Gross Merchandise Value, represents the total transaction value flowing through the platform before separating merchant revenue from Nova's commission.
 

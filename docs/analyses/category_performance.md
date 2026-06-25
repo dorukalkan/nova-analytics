@@ -7,39 +7,38 @@ author: Yasemen Nur Salım Dündar
 
 # Category Performance Intelligence
 
+![Tableau Category Performance Dashboard](../assets/4_category.png)
+
 === "Insights"
 
-    ![Tableau Category Performance Dashboard](../assets/4_category.png)
+    Category performance is a scale-versus-reliability story. E-Commerce is the largest value pool, but it also carries the weakest completion profile. Digital Wallet is much smaller, but it shows the strongest execution quality.
 
-    Category Performance Intelligence compares Nova's service categories across revenue contribution, service quality, operational risk, repeat behavior, and growth potential.
+    !!! abstract "Key takeaway"
 
-    !!! abstract "What this page answers"
+        Nova should not treat every category as an equal growth candidate. The biggest opportunity is to protect high-GMV categories where reliability leakage is expensive, while using stronger categories as operating benchmarks.
 
-        - Which categories contribute the most revenue?
-        - Which categories carry the highest operational risk?
-        - Which services need intervention?
-        - Where should growth investment be prioritized?
+    ## Key Findings
 
-    ## KPI Cards
-
-    | KPI | What it shows | Why it matters |
+    | Finding | Metric | Interpretation |
     | --- | --- | --- |
-    | Critical Services | Number of services classified as operationally critical | Highlights where immediate service-level attention is needed |
-    | Average Rating | Average customer rating across services | Tracks category-level service quality |
-    | Repeat User Rate | Share of users who interact with the same service multiple times | Shows whether a category is building durable customer behavior |
+    | E-Commerce is the value anchor | **$1.11B GMV**, **41.9% GMV share** | The category drives the largest share of platform value |
+    | E-Commerce also has the weakest completion profile | **86.5% completion**, about **15.0% non-completed amount rate** | Reliability improvements here have the highest financial leverage |
+    | Food Delivery is the usage engine | **14.86M transactions**, **93.6% completion** | It drives the most interactions and performs better operationally than the largest GMV category |
+    | Grocery is the second-largest value pool | **$520.8M GMV**, **19.6% GMV share**, **91.5% completion** | It is large enough to matter, but should be monitored for service-risk concentration |
+    | Ride Hailing needs stabilization | **$312.2M GMV**, **88.0% completion**, about **11.9% non-completed amount rate** | The category has meaningful scale with weaker reliability |
+    | Digital Wallet is the reliability benchmark | **96.6% completion**, **$279.6M GMV** | It is smaller, but shows the strongest execution quality |
 
-    ## Dashboard Views
+    ## Business Insights
 
-    | View | What it shows | Business use |
-    | --- | --- | --- |
-    | Revenue-Risk Matrix | Category revenue share, revenue loss rate, and total revenue | Finds large categories with meaningful risk exposure |
-    | Service Performance Scorecard | Service-level revenue, success, refund, failure, and risk segment | Identifies services needing operational attention |
-    | Service Risk Distribution | Risk segment counts by category | Distinguishes isolated service issues from broad category risk |
-    | Growth Opportunity Ranking | Category scale and execution quality | Prioritizes categories for expansion or stabilization |
+    The category portfolio is not simply a ranking by GMV. E-Commerce deserves the most attention because it combines the largest value base with the most visible reliability leakage. Even small improvements in completion, failure, or refund behavior would affect a larger dollar base than in any other category.
 
-    !!! success "So what?"
+    Food Delivery and Grocery tell a different story. Food Delivery has the highest interaction volume, making it important for daily engagement and operational capacity planning. Grocery is a large value pool with decent completion, but the dashboard's service-risk distribution suggests it should be watched before scaling aggressively.
 
-        Categories with strong revenue and high success rates are better candidates for growth. Categories with high revenue but weaker reliability should be stabilized before additional investment.
+    The dashboard also surfaces **3,067 critical services**, a **4.4 average rating**, and a **6.4% repeat user rate**. That means category performance should be managed below the category level: service health, service concentration, and risk segment mix determine whether growth is durable.
+
+    !!! success "Recommendation"
+
+        Prioritize reliability work in E-Commerce and Ride Hailing, use Digital Wallet as the quality benchmark, and review critical or monitor services before pushing growth investment into categories with elevated non-completion risk.
 
 === "Method"
 

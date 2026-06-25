@@ -7,9 +7,9 @@ author: Doruk Alkan
 
 # Marketplace Analysis & Growth Opportunities
 
-=== "Insights"
+![Tableau Marketplace Analysis Dashboard](../assets/2_marketplace_analysis.png)
 
-    ![Tableau Marketplace Analysis Dashboard](../assets/2_marketplace_analysis.png)
+=== "Insights"
 
     Nova's marketplace footprint spans **4 continents**, **8 regions**, and **16 city markets**. The footprint is global, but usage is highly concentrated: **Asia accounts for 74.65% of transactions** and roughly **69.6% of GMV**.
 

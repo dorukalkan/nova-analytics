@@ -7,43 +7,42 @@ author: Merve Kaymaz
 
 # Customer Analysis
 
+![Tableau Customer Analysis Dashboard](../assets/6_customer_analysis.jpeg)
+
 === "Insights"
 
-    ![Tableau Customer Analysis Dashboard](../assets/6_customer_analysis.jpeg)
+    Customer Analysis shows that Nova's customer value is highly concentrated. Premium members are a minority of the user base, but they contribute most completed revenue. High Value lifecycle customers show the same pattern: smaller in count, much larger in economic impact.
 
-    Customer Analysis profiles Nova's customer base by membership tier, acquisition source, lifecycle stage, and revenue contribution. It shows who the customers are, how valuable different groups are, and where growth or retention work should focus.
+    !!! abstract "Key takeaway"
 
-    !!! abstract "What this page answers"
+        Nova should manage customer growth around value concentration, not user count alone. Premium conversion, high-value retention, and channel quality matter more than broad acquisition volume.
 
-        - Which customer groups contribute the most revenue?
-        - How does revenue vary across membership tiers?
-        - Which acquisition sources bring the most users and revenue?
-        - How are customers distributed across lifecycle stages?
+    ## Key Findings
 
-    ## KPI Cards
-
-    | KPI | What it shows | Why it matters |
+    | Finding | Metric | Interpretation |
     | --- | --- | --- |
-    | Premium Members | Share of customers in Gold or Platinum membership tiers | Shows the size of the high-value customer base |
-    | Organic Search Share | Share of customers acquired through organic search | Indicates how much growth comes from unpaid discovery |
-    | Top Revenue Segment | Lifecycle or customer segment with the highest revenue | Identifies the group most responsible for current business value |
+    | Premium members are a minority | **25.28% of customers** are Gold or Platinum | The premium base is still small enough to grow |
+    | Premium members carry most completed revenue | About **$1.56B of $2.36B** completed revenue | Membership tier is strongly tied to customer value |
+    | Platinum customers are the highest-value tier | **$5,397** average completed revenue per customer | Platinum behavior is the clearest high-value benchmark |
+    | Gold customers also outperform Standard | **$2,374 vs $534** average completed revenue per customer | Upgrading Standard customers could materially improve customer economics |
+    | Organic Search is the largest acquisition channel | **32.14%** of customers and **$756.64M** completed revenue | Organic discovery is both the biggest user source and the largest revenue channel |
+    | High Value customers dominate lifecycle revenue | **199K** customers generate **$1.44B** completed revenue | The most valuable lifecycle group is much smaller than the largest customer group |
 
-    ## Dashboard Views
+    ## Business Insights
 
-    | View | What it shows | Business use |
-    | --- | --- | --- |
-    | Membership Distribution | Standard, Gold, and Platinum customer mix | Shows room for premium tier growth |
-    | Revenue per Customer by Tier | Average revenue by membership tier | Validates whether premium tiers behave as higher-value groups |
-    | Acquisition Source Analysis | Customer count and revenue by acquisition source | Compares channel volume with channel value |
-    | Lifecycle Segment Analysis | Revenue and count by lifecycle group | Separates broad customer volume from high-value behavior |
+    Membership tier is the clearest value signal on this page. Standard customers make up most of the base, but Platinum and Gold customers generate far more value per customer. That suggests the main customer opportunity is not only acquiring more users, but moving the right users into higher-value behavior.
 
-    !!! success "So what?"
+    Acquisition quality also matters. Organic Search brings both the largest customer count and the largest completed revenue, while Push Notification is smaller by volume but has the highest average completed revenue per customer among acquisition sources. Channel strategy should separate scale from efficiency.
 
-        Lifecycle and membership views help stakeholders distinguish customer volume from customer value. A smaller high-value group can drive more revenue than a much larger low-activity group.
+    Lifecycle segmentation makes the retention priority clear. Retained customers are the largest group at about **1.09M** users and **$821.71M** completed revenue, but High Value customers generate more revenue from a much smaller base. Inactive customers are large in count, at about **300K**, but contribute almost no current value.
+
+    !!! success "Recommendation"
+
+        Prioritize premium conversion and High Value retention first, keep Organic Search strong as the main acquisition engine, and use lower-volume channels like Push Notification for targeted high-value engagement rather than broad reach.
 
 === "Method"
 
-    This page is dbt-only. It does not use predictive modeling or notebooks.
+    This page includes the dbt models used for the analysis.
 
     ## dbt Model Flow
 
