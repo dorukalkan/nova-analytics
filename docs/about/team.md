@@ -51,8 +51,8 @@ Project writeups:
 - [RFM Analysis](../analyses/rfm_analysis.md)
 
 ```text title="Email"
-email
+mmmervekaymazzz@gmail.com
 ```
 
-linkedin
-github
+[LinkedIn :fontawesome-brands-linkedin:](www.linkedin.com/in/merve-k-781667173){ .md-button }
+[GitHub :fontawesome-brands-github:](https://github.com/mmervekaymaz){ .md-button }
