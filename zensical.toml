@@ -288,7 +288,7 @@ features = [
 # - https://github.com/zensical/ui/tree/master/dist/.icons
 # ----------------------------------------------------------------------------
 # [project.theme.icon]
-logo = "assets/nova_logo.png"
+logo = "assets/nova_icon.png"
 
 # ----------------------------------------------------------------------------
 # In the "font" subsection you can configure the fonts used. By default, fonts
