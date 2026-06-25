@@ -1,0 +1,8 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "trailingSlash": true,
+  "installCommand": "python3 -m venv .vercel-venv && .vercel-venv/bin/python -m pip install --upgrade pip && .vercel-venv/bin/python -m pip install -r requirements-docs.txt",
+  "buildCommand": ".vercel-venv/bin/python -m zensical build -f zensical.toml --clean && .vercel-venv/bin/python -m zensical build -f zensical.tr.toml --clean",
+  "outputDirectory": "site"
+}
