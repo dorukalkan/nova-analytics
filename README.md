@@ -1,190 +1,82 @@
-# Project Overview
-
-This project was developed as an end-to-end analytics solution for the Nova SuperApp ecosystem, covering the complete data lifecycle from raw data ingestion to business intelligence dashboards and machine learning-based fraud detection.
-
-The solution combines modern data engineering, analytics engineering, business intelligence, and machine learning practices to transform large-scale transactional data into actionable business insights.
-
----
-
-## Technology Stack
-
-| Layer                              | Technology         |
-| ---------------------------------- | ------------------ |
-| Data Warehouse                     | BigQuery           |
-| Analytics Engineering              | dbt                |
-| Data Processing & Machine Learning | Python             |
-| Notebook Environment               | Jupyter Notebook   |
-| Business Intelligence              | Tableau            |
-
----
-
-## End-to-End Data Pipeline
-
-### 1. Data Storage & Processing (BigQuery)
-
-The project utilizes Google BigQuery as the central cloud data warehouse.
-
-Raw transactional, user, and service datasets are stored and processed in BigQuery, allowing scalable analysis on millions of records.
-
-Responsibilities:
-
-•⁠  ⁠Raw data storage
-•⁠  ⁠Large-scale SQL processing
-•⁠  ⁠Analytical data modeling
-•⁠  ⁠Machine learning data extraction
-
----
-
-### 2. Data Transformation (dbt)
-
-dbt (Data Build Tool) was used to build a modular and maintainable transformation layer.
-
-The data model follows a layered architecture:
-
-#### Staging Layer
-
-Raw data cleaning and standardization.
-
-Examples:
-
-•⁠  ⁠stg_users
-•⁠  ⁠stg_services
-•⁠  ⁠stg_interactions
-
-#### Intermediate Layer
-
-Business logic implementation and metric calculations.
-
-Examples:
-
-•⁠  ⁠Service health metrics
-•⁠  ⁠Risk metrics
-•⁠  ⁠Repeat behavior calculations
-
-#### Mart Layer
-
-Business-ready aggregated tables designed specifically for reporting and analytics.
-
-Examples:
-
-•⁠  ⁠mart_service_monthly_performance
-•⁠  ⁠mart_service_repeat_behavior
-•⁠  ⁠mart_category_market_performance
-
-Benefits:
-
-•⁠  ⁠Reusable SQL models
-•⁠  ⁠Version-controlled transformations
-•⁠  ⁠Scalable analytics workflow
-•⁠  ⁠Documentation and lineage support
-
----
-
-### 3. Development Environment (Visual Studio Code) --remove
-
-Visual Studio Code was used as the primary development environment.
-
-Activities performed:
-
-•⁠  ⁠dbt model development
-•⁠  ⁠SQL transformations
-•⁠  ⁠Git version control
-•⁠  ⁠Branch management
-•⁠  ⁠Project collaboration
-
----
-
-### 4. Machine Learning & Fraud Detection (Python + Jupyter Notebook)
-
-Machine learning workflows were developed using Python in Jupyter Notebook.
-
-The notebook environment was used for:
-
-•⁠  ⁠Data exploration
-•⁠  ⁠Feature engineering
-•⁠  ⁠Statistical analysis
-•⁠  ⁠Fraud detection modeling
-•⁠  ⁠Model evaluation
-
-#### Fraud Detection Approach
-
-Since no labeled fraud dataset was available, an Unsupervised Learning approach was selected.
-
-Algorithm used:
-
-*Isolation Forest*
-
-Generated features included:
-
-•⁠  ⁠Transaction amount
-•⁠  ⁠Transaction frequency
-•⁠  ⁠Spending behavior
-•⁠  ⁠Time-based activity patterns
-•⁠  ⁠User transaction history
-•⁠  ⁠Cross-market behavior
-•⁠  ⁠Failed and refunded transactions
-
-Model output:
-
-•⁠  ⁠Fraud Anomaly Score
-•⁠  ⁠Is Anomaly Flag
-
-The model identifies transactions that significantly deviate from normal customer behavior patterns.
-
----
-
-### 5. Business Intelligence & Visualization (Tableau)
-
-Final analytical outputs were visualized using Tableau.
-
-Interactive dashboards were developed to support executive-level decision making.
-
-Key dashboards include:
-
-#### Category Performance Intelligence
-
-Focus Areas:
-
-•⁠  ⁠Revenue contribution
-•⁠  ⁠Risk exposure
-•⁠  ⁠Service quality
-•⁠  ⁠Growth opportunities
-
-#### Customer Repeat & Risk Intelligence
-
-Focus Areas:
-
-•⁠  ⁠Customer loyalty
-•⁠  ⁠Repeat revenue dependency
-•⁠  ⁠Fraud risk monitoring
-•⁠  ⁠Market-level anomaly analysis
-
-Dashboard Features:
-
-•⁠  ⁠Interactive filters
-•⁠  ⁠KPI cards
-•⁠  ⁠Drill-down analysis
-•⁠  ⁠Comparative benchmarking
-•⁠  ⁠Executive-level visual storytelling
-
----
-
-## Business Value
-
-This project demonstrates a complete modern analytics workflow by integrating:
-
-•⁠  ⁠Cloud Data Warehousing
-•⁠  ⁠Analytics Engineering
-•⁠  ⁠Machine Learning
-•⁠  ⁠Fraud Detection
-•⁠  ⁠Business Intelligence
-
-The resulting solution enables stakeholders to make data-driven decisions regarding:
-
-•⁠  ⁠Category performance optimization
-•⁠  ⁠Customer retention strategies
-•⁠  ⁠Operational risk management
-•⁠  ⁠Fraud detection and monitoring
-•⁠  ⁠Growth opportunity identification
-
-Through this architecture, raw transactional data is transformed into scalable analytical assets and actionable business insights.
+<p align="center">
+  <img src="docs/assets/nova_banner.png" alt="Nova Analytics banner">
+</p>
+
+# Nova Analytics
+
+![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
+![dbt](https://img.shields.io/badge/dbt-Analytics_Engineering-FF694B?logo=dbt&logoColor=white)
+![BigQuery](https://img.shields.io/badge/BigQuery-Cloud_Warehouse-4285F4?logo=googlecloud&logoColor=white)
+![Tableau](https://img.shields.io/badge/Tableau-BI_Dashboards-E97627?logo=tableau&logoColor=white)
+![Jupyter](https://img.shields.io/badge/Jupyter-Notebooks-F37626?logo=jupyter&logoColor=white)
+
+Nova Analytics is an end-to-end analytics portfolio project built around a global super-app marketplace dataset. The project covers realistic data regeneration, BigQuery warehousing, dbt modeling, Python analysis, Tableau dashboards, and a Zensical writeup site for business storytelling.
+
+**Full project site:** deployment URL pending. Site source starts at [docs/index.md](docs/index.md).
+
+## Project Snapshot
+
+| Area | Summary |
+| --- | --- |
+| Dataset scale | 50M interactions, 1.71M active users, 50K services |
+| Marketplace value | $2.66B GMV across 2024 |
+| Coverage | 16 city markets across 4 continents and 8 regions |
+| Analysis output | 7 Tableau-backed analysis pages |
+| Pipeline | Regenerated dataset, BigQuery, SQL, dbt staging/intermediate/marts, Python notebooks, Tableau |
+
+## What This Demonstrates
+
+- Analytics engineering with tested dbt staging, intermediate, mart, and ML feature layers.
+- Cloud warehouse modeling for marketplace, customer, service, category, geography, and risk analysis.
+- 50M-row synthetic data correction with QA checks for grain, relationships, realism, and BigQuery readiness.
+- External enrichment from weather, country metadata, and macroeconomic APIs.
+- Python modeling for local demand drivers, market clustering, and unsupervised transaction anomaly detection.
+- Recruiter-friendly business storytelling through Tableau dashboards and a bilingual documentation site.
+
+## Analysis Areas
+
+| Analysis | Business focus |
+| --- | --- |
+| Executive Summary | Marketplace scale, headline GMV, customer base shape, and pipeline overview |
+| Marketplace Analysis | Regional performance, market opportunity scoring, and growth prioritization |
+| Local Demand Drivers | Weather effects, service supply, timing patterns, and demand modeling |
+| Category Performance | Category GMV, service reliability, operational risk, and growth stabilization |
+| Customer Repeat & Risk | Repeat behavior, suspicious transaction patterns, anomaly scoring, and review priorities |
+| Customer Analysis | Membership tiers, acquisition channels, lifecycle behavior, and value concentration |
+| RFM Analysis | Recency, frequency, monetary segmentation, retention priorities, and customer development |
+
+## Repository Structure
+
+```text
+.
+|-- nova/                 # dbt project: sources, staging, intermediate, marts, tests, seeds
+|-- scripts/              # data regeneration, validation, and external seed fetchers
+|-- notebooks/            # EDA, fraud detection, demand modeling, and clustering notebooks
+|-- docs/                 # English Zensical project site content
+|-- docs-tr/              # Turkish Zensical project site content
+|-- docs/assets/          # banner, logos, dashboard images, icons
+|-- docs/reports/         # validation reports and audit notes
+|-- exports/              # exported analysis visuals
+|-- config/               # synthetic data correction configuration
+`-- vercel.json           # documentation site deployment build config
+```
+
+## Data & Modeling Notes
+
+The project starts from the public [Nova 50M Transactions Super-App dataset](https://www.kaggle.com/datasets/adityathakekar/nova-50m-transactions-super-app), a synthetic marketplace dataset with interactions, users, services, and markets.
+
+We regenerated the dataset before modeling so the final analytics layer had more realistic behavior: market-level seasonality, category-specific basket sizes, service supply effects, customer lifecycle variation, weather sensitivity, and fraud-like transaction patterns.
+
+The dbt models and notebooks are designed around a private BigQuery project, so this repository intentionally does not include public run instructions or warehouse credentials. The code, model structure, validation reports, and documentation remain available for review.
+
+Fraud analysis is unsupervised anomaly detection. Suspicious transaction flags are meant for review workflows and should not be interpreted as confirmed fraud labels.
+
+## Team
+
+| Contributor | Focus |
+| --- | --- |
+| Doruk Alkan | Market opportunity, external API enrichment, demand modeling, market clustering, Tableau, and project site |
+| Yasemen Salım Dundar | Category and service performance, repeat customer and risk behavior, fraud anomaly analysis, and Tableau |
+| Merve Kaymaz | Customer lifecycle, acquisition analysis, customer value segmentation, RFM analysis, and Tableau |
+
+Full contributor details are available in [docs/about/team.md](docs/about/team.md).
