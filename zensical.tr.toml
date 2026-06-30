@@ -2,6 +2,7 @@
 site_name = "Nova Analytics Projesi"
 site_description = "Global super-app veri seti üzerine uçtan uca bir veri analitiği projesi."
 site_author = "Doruk Alkan"
+site_url = "https://nova-analytics-project.vercel.app/tr/"
 docs_dir = "docs-tr"
 site_dir = "site/tr"
 repo_url = "https://github.com/mmervekaymaz/nova-analytics"
