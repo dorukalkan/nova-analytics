@@ -6,7 +6,7 @@ paths:
   raw_dir: data/raw
   corrected_dir: data/corrected
   qa_dir: data/corrected/qa
-  validation_report: docs/reports/corrected_data_validation.md
+  validation_report: data/corrected/qa/corrected_data_validation.md
   weather_seed: nova/seeds/ext_weather_daily.csv
 
 dates:

@@ -55,7 +55,6 @@ Nova Analytics is an end-to-end analytics portfolio project built around a globa
 |-- docs/                 # English Zensical project site content
 |-- docs-tr/              # Turkish Zensical project site content
 |-- docs/assets/          # banner, logos, dashboard images, icons
-|-- docs/reports/         # validation reports and audit notes
 |-- exports/              # exported analysis visuals
 |-- config/               # synthetic data correction configuration
 `-- vercel.json           # documentation site deployment build config
@@ -67,7 +66,7 @@ The project starts from the public [Nova 50M Transactions Super-App dataset](htt
 
 We regenerated the dataset before modeling so the final analytics layer had more realistic behavior: market-level seasonality, category-specific basket sizes, service supply effects, customer lifecycle variation, weather sensitivity, and fraud-like transaction patterns.
 
-The dbt models and notebooks are designed around a private BigQuery project, so this repository intentionally does not include public run instructions or warehouse credentials. The code, model structure, validation reports, and documentation remain available for review.
+The dbt models and notebooks were designed around a private BigQuery project, so this repository intentionally does not include public run instructions or warehouse credentials. The code, model structure, notebooks, and documentation remain available for review.
 
 Fraud analysis is unsupervised anomaly detection. Suspicious transaction flags are meant for review workflows and should not be interpreted as confirmed fraud labels.
 
