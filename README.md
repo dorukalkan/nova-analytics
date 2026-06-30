@@ -12,7 +12,7 @@
 
 Nova Analytics is an end-to-end analytics portfolio project built around a global super-app marketplace dataset. The project covers realistic data regeneration, BigQuery warehousing, dbt modeling, Python analysis, Tableau dashboards, and a Zensical writeup site for business storytelling.
 
-**Full project site:** https://nova-analytics-project.vercel.app. Site source starts at [docs/index.md](docs/index.md).
+**Full project site:** [nova-analytics-project.vercel.app](https://nova-analytics-project.vercel.app).
 
 ## Project Snapshot
 
@@ -78,4 +78,4 @@ Fraud analysis is unsupervised anomaly detection. Suspicious transaction flags a
 | Yasemen Salım Dundar | Category and service performance, repeat customer and risk behavior, fraud anomaly analysis, and Tableau |
 | Merve Kaymaz | Customer lifecycle, acquisition analysis, customer value segmentation, RFM analysis, and Tableau |
 
-Full contributor details are available in [docs/about/team.md](docs/about/team.md).
+Full contributor details are available on the [Team page](https://nova-analytics-project.vercel.app/about/team/).
