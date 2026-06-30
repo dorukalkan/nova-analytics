@@ -12,7 +12,7 @@
 
 Nova Analytics is an end-to-end analytics portfolio project built around a global super-app marketplace dataset. The project covers realistic data regeneration, BigQuery warehousing, dbt modeling, Python analysis, Tableau dashboards, and a Zensical writeup site for business storytelling.
 
-**Full project site:** deployment URL pending. Site source starts at [docs/index.md](docs/index.md).
+**Full project site:** https://nova-analytics-project.vercel.app. Site source starts at [docs/index.md](docs/index.md).
 
 ## Project Snapshot
 
