@@ -5,7 +5,7 @@ site_author = "Doruk Alkan"
 site_url = "https://nova-analytics-project.vercel.app/tr/"
 docs_dir = "docs-tr"
 site_dir = "site/tr"
-repo_url = "https://github.com/mmervekaymaz/nova-analytics"
+repo_url = "https://github.com/dorukalkan/nova-analytics"
 repo_name = "nova-analytics"
 extra_css = ["stylesheets/extra.css"]
 
